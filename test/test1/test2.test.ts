@@ -1,11 +1,12 @@
 import { expect, test } from 'vitest'
 
-import { connection, db } from './db';
+import { connection, db } from '../db';
 import { users } from './schema';
 import { migrate } from 'drizzle-orm/mysql2/migrator';
 
 
 await connection.query('DROP TABLE IF EXISTS users');
+await connection.query('DROP TABLE IF EXISTS messages');
 await connection.query('DROP TABLE IF EXISTS __drizzle_migrations');
 
 await migrate(db, { migrationsFolder: 'test/test1/migrations' });
