@@ -9,6 +9,6 @@ export default defineConfig({
         password: 'lqA6aQebwzWMzJ3y1QLp6MAo9vHntJ9L',
         database: 'testdb_drizzle_orm'
     },
-    schema: "./src/schema.ts",
-    out: "./migrations"
+    schema: "app/src/schema.ts",
+    out: "app/migrations"
 });

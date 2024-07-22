@@ -1,6 +1,5 @@
-// src/index.ts
-import { connection, db } from '../db';
-import { NewUser, users } from '../schema';
+import { connection, db } from '../../test/db';
+import { NewUser, users } from '../../test/test1/schema';
 import { SinglestoreRawQueryResult } from '../../src/singlestore-core';
 
 async function insertUser(user: NewUser): Promise<SinglestoreRawQueryResult> {

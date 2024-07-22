@@ -4,13 +4,14 @@
   "description": "Template project for open source projects from SingleStore",
   "main": "index.ts",
   "directories": {
-    "test": "tests"
+    "test": "test"
   },
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
     "start": "npx tsx test/test1/index.ts",
-    "migrate": "npx drizzle-kit generate"
+    "generate": "npx drizzle-kit generate --config app/drizzle.config.ts",
+    "migrate": "npx tsx app/src/migrate.ts"
   },
   "repository": {
     "type": "git",
@@ -32,7 +33,8 @@
     "@types/http-status-codes": "1.2.0",
     "@types/uuid": "10.0.0",
     "drizzle-kit": "0.23.0",
-    "tsx": "4.16.2"
+    "tsx": "4.16.2",
+    "vitest": "2.0.4"
   },
   "dependencies": {
     "drizzle-orm": "0.32.0",

@@ -1,4 +1,4 @@
-import { drizzle } from '../src/singlestore';
+import { drizzle } from '../../src/singlestore';
 import mysql from 'mysql2/promise';
 import * as schema from './schema';
 

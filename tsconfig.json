@@ -13,9 +13,9 @@
   "include": [
     "src/**/*",
     "test/index.ts",
-    "test/db.ts",
+    "app/src/db.ts",
     "test/migrate.ts",
-    "test/schema.ts"
+    "test/test1/schema.ts"
   ],
   "exclude": ["node_modules"]
 }
