@@ -1,6 +1,7 @@
-import { drizzle } from '../../src/singlestore';
+import { drizzle } from '../src/singlestore';
+
 import mysql from 'mysql2/promise';
-import * as schema from './schema';
+import * as schema from './test1/schema';
 
 if (!process.env.UNITTEST_PORT) {
     throw new Error('UNITTEST_PORT is not defined');

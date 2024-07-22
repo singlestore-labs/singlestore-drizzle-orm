@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { uuid } from '../../src/columns/uuid';
-import { index, singlestoreTable, bigint, varchar } from '../../src/singlestore-core';
+import { index, singlestoreTable, bigint, varchar, datetime } from '../../src/singlestore-core';
 
 export const users = singlestoreTable('users', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
@@ -12,3 +12,13 @@ export const users = singlestoreTable('users', {
 
 export type User = typeof users.$inferSelect; // return type when queried
 export type NewUser = typeof users.$inferInsert; // insert type
+
+export const messages = singlestoreTable('messages', {
+  id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+  userId: bigint('user_id', { mode: 'number' }),
+  message: varchar('message', { length: 256 }),
+  createdAt: datetime('created_at'),
+});
+
+export type Message = typeof messages.$inferSelect; // return type when queried
+export type NewMessage = typeof messages.$inferInsert; // insert type
