@@ -1,5 +1,4 @@
-# open-source-template
-Template project for open source projects from SingleStore
+# Drizzle ORM connector for SingleStore
 
 ## Usage
 
@@ -12,8 +11,23 @@ Template project for open source projects from SingleStore
    export SINGLESTORE_LICENSE="singlestore license"
    ```
 
+## Developing
+
+We have two main folders:
+
+- `test`: Unit tests.
+- `app`: A small test app with a simple API.
+- `src`: The source code of the package we're developing.
+
+### `npm` commands
+
+- `npm test`: Runs the unit tests
+- `npm start`: Starts the test app
+- `npm generate`: Creates migrations as needed for the test app
+- `npm migrate`: Apply migrations as needed for the test app
+
 ## Resources
 
-* [Documentation](https://docs.singlestore.com)
-* [Twitter](https://twitter.com/SingleStoreDevs)
-* [SingleStore forums](https://www.singlestore.com/forum)
+- [Documentation](https://docs.singlestore.com)
+- [Twitter](https://twitter.com/SingleStoreDevs)
+- [SingleStore forums](https://www.singlestore.com/forum)

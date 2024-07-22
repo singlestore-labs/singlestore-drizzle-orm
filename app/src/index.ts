@@ -1,4 +1,4 @@
-import { connection, db } from '../../test/db';
+import { connection, db } from './db';
 import { NewUser, users } from '../../test/test1/schema';
 import { SinglestoreRawQueryResult } from '../../src/singlestore-core';
 

@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "start": "npx tsx test/test1/index.ts",
+    "start": "npx tsx app/src/index.ts",
     "generate": "npx drizzle-kit generate --config app/drizzle.config.ts",
     "migrate": "npx tsx app/src/migrate.ts"
   },
