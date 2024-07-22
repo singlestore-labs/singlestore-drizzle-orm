@@ -2,12 +2,16 @@ import { drizzle } from '../../src/singlestore';
 import mysql from 'mysql2/promise';
 import * as schema from './schema';
 
+if (!process.env.TESTAPP_PORT) {
+    throw new Error('TESTAPP_PORT is not defined');
+}
+
 export const connection = await mysql.createConnection({
-    host: 'svc-446b8c45-7bf8-4130-b24b-b4a98e5e253a-dml.aws-virginia-5.svc.singlestore.com',
-    port: 3306,
-    user: 'admin',
-    password: 'IUW84L5JnPnqwEFYGgdPDm4x7pHJ4xHn',
-    database: 'testdb_drizzle_orm',
+    host: process.env.TESTAPP_HOST,
+    port: parseInt(process.env.TESTAPP_PORT),
+    user: process.env.TESTAPP_USER,
+    password: process.env.TESTAPP_PASSWORD,
+    database: process.env.TESTAPP_DATABASE,
     multipleStatements: false,
 });
 
