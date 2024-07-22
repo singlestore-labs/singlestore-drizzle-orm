@@ -27,11 +27,7 @@ test('should insert a user', async () => {
 });
 
 test('should get users', async () => {
-	const result = await db.select().from(users);
-	expect(result).toEqual([
-		{
-			id: result[0].id,
-			fullName: 'Morty'
-		}
-	]);
+	const [result] = await db.select().from(users);
+	expect(result.extID).toMatch(/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/)
+	expect(result.fullName).toEqual("Morty")
 });
