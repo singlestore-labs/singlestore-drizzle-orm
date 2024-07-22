@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "src/**/*",
+    "test/index.ts",
+    "test/db.ts",
+    "test/migrate.ts",
+    "test/schema.ts"
+  ],
+  "exclude": ["node_modules"]
+}
