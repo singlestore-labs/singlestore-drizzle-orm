@@ -34,7 +34,8 @@ describe('users', () => {
 		expect(result).toEqual([
 			{
 				id: result[0].id,
-				fullName: 'Morty'
+				fullName: 'Morty',
+				extID: result[0].extID
 			}
 		]);
 	});
@@ -42,15 +43,15 @@ describe('users', () => {
 
 describe('messages', async () => {
 	test('should insert a message', async () => {
-		var result = await db.select().from(users);
-		const user = result[0];
+		const usersResult = await db.select().from(users);
+		const user = usersResult[0];
 
-		result = await db.insert(messages).values({
+		const messagesResult = await db.insert(messages).values({
 			userId: user.id,
 			message: 'Hello',
 			createdAt: new Date()
 		});
-		expect(result).toEqual([
+		expect(messagesResult).toEqual([
 			{
 				fieldCount: 0,
 				affectedRows: 1,
@@ -58,23 +59,21 @@ describe('messages', async () => {
 				warningStatus: 0,
 				changedRows: 0,
 				info: '',
-				insertId: result[0].insertId
+				insertId: messagesResult[0].insertId
 			},
 			undefined
 		]);
 	});
 
-	test('should join with users', async () => {
-		var result
-		
-		result = await db.select().from(users);
-		const user = result[0];
+	test('should join with users', async () => {		
+		const usersResult = await db.select().from(users);
+		const user = usersResult[0];
 
-		result = await db.select().from(messages);
-		const message = result[0];
+		const messagesResult = await db.select().from(messages);
+		const message = messagesResult[0];
 
-		result = await db.select().from(messages).innerJoin(users, eq(messages.userId, users.id));
-		expect(result).toEqual([
+		const joinResult = await db.select().from(messages).innerJoin(users, eq(messages.userId, users.id));
+		expect(joinResult).toEqual([
 			{
 				messages: {
 					id: message.id,
@@ -85,12 +84,13 @@ describe('messages', async () => {
 				users: {
 					id: user.id,
 					fullName: 'Morty',
+					extID: user.extID
 				},
 			}
 		]);
 
-		result = await db.select().from(messages).fullJoin(users, eq(messages.userId, users.id));
-		expect(result).toEqual([
+		const fullJoinResult = await db.select().from(messages).fullJoin(users, eq(messages.userId, users.id));
+		expect(fullJoinResult).toEqual([
 			{
 				messages: {
 					id: message.id,
@@ -101,6 +101,7 @@ describe('messages', async () => {
 				users: {
 					id: user.id,
 					fullName: 'Morty',
+					extID: user.extID
 				},
 			}
 		]);

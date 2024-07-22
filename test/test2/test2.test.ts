@@ -7,8 +7,8 @@ test.skip('should not be able to add references', async () => {
 		{
 			id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
 			fullName: varchar('full_name', { length: 256 }),
-		}, (users: User[]) => ({
-			nameIdx: index('name_idx').on(users.fullName),
+		}, (table) => ({
+			nameIdx: index('name_idx').on(table.fullName),
 		})
 	)
 
