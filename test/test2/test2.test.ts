@@ -2,7 +2,7 @@ import { expect, test, describe } from 'vitest'
 
 import { index, int, singlestoreTable, bigint, varchar } from '../../src/singlestore-core';
 
-test.skip('should not be able to add references', async () => {
+test('should not be able to add references', async () => {
 	const users = singlestoreTable('users', 
 		{
 			id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
