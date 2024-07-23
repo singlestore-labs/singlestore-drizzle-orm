@@ -8,7 +8,7 @@
   },
   "type": "module",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest --no-file-parallelism",
     "start": "npx tsx app/src/index.ts",
     "generate": "npx drizzle-kit generate --config app/drizzle.config.ts",
     "migrate": "npx tsx app/src/migrate.ts"

@@ -6,10 +6,14 @@
    to run up to 4 nodes up to 32 gigs each for free. Grab your license key from
    [SingleStore portal](https://portal.singlestore.com/?utm_medium=osm&utm_source=github) and set it as an environment
    variable.
-
    ```bash
    export SINGLESTORE_LICENSE="singlestore license"
    ```
+2. Install nvm
+   ```bash
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+   ```
+3. Run `nvm use`
 
 ## Developing
 
@@ -23,8 +27,8 @@ We have two main folders:
 
 - `npm test`: Runs the unit tests
 - `npm start`: Starts the test app
-- `npm generate`: Creates migrations as needed for the test app
-- `npm migrate`: Apply migrations as needed for the test app
+- `npm run generate`: Creates migrations as needed for the test app
+- `npm run migrate`: Apply migrations as needed for the test app
 
 ## Resources
 
