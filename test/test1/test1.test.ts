@@ -2,7 +2,7 @@ import { expect, test, describe } from 'vitest'
 
 import { connection, db } from '../db';
 import { users, messages } from './schema';
-import { migrate } from '@drodrigues4/drizzle-orm/mysql2/migrator';
+import { migrate } from '@drodrigues4/drizzle-orm/singlestore/migrator';
 
 import { eq } from '@drodrigues4/drizzle-orm';
 
@@ -101,5 +101,15 @@ describe('messages', async () => {
 			}
 		]);
 	});
+});
+
+describe.skip('attach and detach', async () => {
+	test('should attach database', async () => {
+		if (!process.env.UNITTEST_DATABASE) {
+			throw new Error('UNITTEST_DATABASE is not defined');
+		}
+
+		const result = await db.detach(process.env.UNITTEST_DATABASE);
+	}, 30 * 1000);
 });
 
