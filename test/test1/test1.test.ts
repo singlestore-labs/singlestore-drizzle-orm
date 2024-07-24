@@ -30,14 +30,9 @@ describe('users', () => {
 	});
 
 	test('should get users', async () => {
-		const result = await db.select().from(users);
-		expect(result).toEqual([
-			{
-				id: result[0].id,
-				fullName: 'Morty',
-				extID: result[0].extID
-			}
-		]);
+		const [result] = await db.select().from(users);
+		expect(result.extID).toMatch(/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/)
+		expect(result.fullName).toEqual("Morty")
 	});
 });
 
@@ -106,14 +101,5 @@ describe('messages', async () => {
 			}
 		]);
 	});
-
-	// test.skip('should not allow lateral joins', async () => {
-	// 	expect(() => {
-	// 		db.select().from(users).leftJoin(messages, eq(messages.userId, users.id));
-	// 	}).toThrowError('__vite_ssr_import_1__.db.select(...).from(...).leftJoin is not a function');
-
-	// 	expect(() => {
-	// 		db.select().from(users).rightJoin(messages, eq(messages.userId, users.id));
-	// 	}).toThrowError('__vite_ssr_import_1__.db.select(...).from(...).leftJoin is not a function');
-	// });
 });
+
