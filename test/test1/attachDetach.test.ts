@@ -1,38 +1,52 @@
-import { expect, test, describe } from 'vitest'
+import { beforeEach, expect, test, describe } from 'vitest'
 
-import { connection, db } from '../db';
-import { dbNoDatabase } from '../dbNoDatabase';
+import { connect } from '../db';
 import { migrate } from '@drodrigues4/drizzle-orm/singlestore/migrator';
 import { users } from './schema';
 import { drizzle } from '@drodrigues4/drizzle-orm/singlestore';
 import * as schema from './schema';
 import mysql from 'mysql2/promise';
 
-if (!process.env.UNITTEST_DATABASE) {
-	throw new Error('UNITTEST_DATABASE is not defined');
+interface LocalTestContext {
+	connectionNoDatabase: mysql.Connection;
+	dbNoDatabase: ReturnType<typeof drizzle>;
+	connection: mysql.Connection;
+	db: ReturnType<typeof drizzle>;
+	dbName: string;
+	dbName_old: string;
 }
-const dbName = process.env.UNITTEST_DATABASE
 
-await connection.query(`DROP TABLE IF EXISTS users`);
-await connection.query(`DROP TABLE IF EXISTS messages`);
-await connection.query(`DROP TABLE IF EXISTS __drizzle_migrations`);
+beforeEach<LocalTestContext>(async (context) => {
+	context.dbName = "testdb_drizzle_orm"
+	context.dbName_old = "testdb_drizzle_orm_old"
 
-await migrate(db, { migrationsFolder: 'test/test1/migrations' });
+	const [connectionNoDatabase, dbNoDatabase] = await connect();
+	context.connectionNoDatabase = connectionNoDatabase;
+	context.dbNoDatabase = dbNoDatabase
+
+	await connectionNoDatabase.query(`DROP DATABASE IF EXISTS ${context.dbName}`);
+	await connectionNoDatabase.query(`DROP DATABASE IF EXISTS ${context.dbName_old}_old`);
+	await connectionNoDatabase.query(`CREATE DATABASE ${context.dbName}`);
+
+	const [connection, db] = await connect(context.dbName);
+	context.connection = connection;
+	context.db = db;
+
+	await migrate(db, { migrationsFolder: 'test/test1/migrations' });
+}, 60 * 1000);
 
 describe('attach and detach', async () => {
-	test('should detach and attach database', async () => {
+	test<LocalTestContext>('should detach and attach database', async ({dbName, dbNoDatabase}) => {
 		var result
 
 		result = await dbNoDatabase.detach(dbName);
 
-		console.log(result); // TODO(singlestore): format this response in a pretty way, so we can get `result.milestone_name`
+		// TODO(singlestore): format this response in a pretty way, so we can get `result.milestone_name`
 
 		result = await dbNoDatabase.attach(dbName);
-
-		console.log(result);
 	}, 30 * 1000);
 
-	test('should detach and attach database with milestones', async () => {
+	test<LocalTestContext>('should detach and attach database with milestones', async ({db, dbNoDatabase}) => {
 		if (!process.env.UNITTEST_PORT) {
 			throw new Error('UNITTEST_PORT is not defined');
 		}
@@ -43,7 +57,6 @@ describe('attach and detach', async () => {
 		var result
 
 		result = await db.insert(users).values({ fullName: 'Rick' });
-
 		expect(result).toEqual([
 			{
 				fieldCount: 0,
@@ -120,7 +133,7 @@ describe('attach and detach', async () => {
 		]);
 	}, 60 * 1000);
 
-	test('should detach and attach database with times', async () => {
+	test<LocalTestContext>('should detach and attach database with times', async ({connection, db, dbNoDatabase}) => {
 		if (!process.env.UNITTEST_PORT) {
 			throw new Error('UNITTEST_PORT is not defined');
 		}
@@ -128,6 +141,33 @@ describe('attach and detach', async () => {
 		const dbName = process.env.UNITTEST_DATABASE as string
 
 		var result
+
+		result = await db.insert(users).values([
+			{ fullName: 'Rick' },
+			{ fullName: 'Morty' },
+		]);
+		expect(result).toEqual([
+			{
+				fieldCount: 0,
+				affectedRows: 2,
+				serverStatus: 2,
+				warningStatus: 0,
+				changedRows: 0,
+				info: '&Records: 2  Duplicates: 0  Warnings: 0',
+				insertId: result[0].insertId
+			},
+			undefined
+		]);
+
+		result = await db.select({
+			fullName: users.fullName,
+		}).from(users).orderBy(users.fullName);
+		expect(result).toEqual([
+			{fullName: 'Morty'},
+			{fullName: 'Rick'},
+		]);
+
+		await new Promise(resolve => setTimeout(resolve, 1000));
 
 		result = await connection.query(`SELECT NOW(6)`);
 		const tStart = result[0][0]['NOW(6)'];
@@ -169,4 +209,83 @@ describe('attach and detach', async () => {
 			{fullName: 'Rick'},
 		]);
 	}, 30 * 1000);
+
+	test<LocalTestContext>('should use create and drop milestones', async ({db, dbNoDatabase}) => {
+		if (!process.env.UNITTEST_PORT) {
+			throw new Error('UNITTEST_PORT is not defined');
+		}
+
+		const dbName = process.env.UNITTEST_DATABASE as string
+
+		var result
+
+		result = await db.insert(users).values({ fullName: 'Rick' });
+		expect(result).toEqual([
+			{
+				fieldCount: 0,
+				affectedRows: 1,
+				serverStatus: 2,
+				warningStatus: 0,
+				changedRows: 0,
+				info: '',
+				insertId: result[0].insertId
+			},
+			undefined
+		]);
+
+		result = await dbNoDatabase.createMilestone("old_milestone").for(dbName);
+
+		result = await db.insert(users).values({ fullName: 'Morty' });
+		expect(result).toEqual([
+			{
+				fieldCount: 0,
+				affectedRows: 1,
+				serverStatus: 2,
+				warningStatus: 0,
+				changedRows: 0,
+				info: '',
+				insertId: result[0].insertId
+			},
+			undefined
+		]);
+
+		result = await db.select({
+			fullName: users.fullName,
+		}).from(users).orderBy(users.fullName);
+		expect(result).toEqual([
+			{fullName: 'Morty'},
+			{fullName: 'Rick'},
+		]);
+
+		result = await dbNoDatabase.createMilestone("new_milestone").for(dbName);
+
+		result = await dbNoDatabase.detach(dbName);
+
+		result = await dbNoDatabase.attach(dbName).atMilestone("old_milestone");
+
+		result = await db.select({
+			fullName: users.fullName,
+		}).from(users).orderBy(users.fullName);
+		expect(result).toEqual([
+			{fullName: 'Rick'},
+		]);
+
+		result = await dbNoDatabase.dropMilestone("old_milestone").for(dbName);
+
+		result = await dbNoDatabase.detach(dbName);
+
+		await expect((async () => {
+			await dbNoDatabase.attach(dbName).atMilestone("old_milestone")
+		})()).rejects.toThrowError(RegExp('Milestone "old_milestone" for database testdb_drizzle_orm does not exist'));
+
+		result = await dbNoDatabase.attach(dbName).atMilestone("new_milestone");
+
+		result = await db.select({
+			fullName: users.fullName,
+		}).from(users).orderBy(users.fullName);
+		expect(result).toEqual([
+			{fullName: 'Morty'},
+			{fullName: 'Rick'},
+		]);
+	}, 60 * 1000);
 });

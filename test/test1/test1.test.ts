@@ -1,14 +1,17 @@
 import { expect, test, describe } from 'vitest'
 
-import { connection, db } from '../db';
+import { connect } from '../db';
 import { users, messages } from './schema';
 import { migrate } from '@drodrigues4/drizzle-orm/singlestore/migrator';
 
 import { eq } from '@drodrigues4/drizzle-orm';
 
-await connection.query('DROP TABLE IF EXISTS users');
-await connection.query('DROP TABLE IF EXISTS messages');
-await connection.query('DROP TABLE IF EXISTS __drizzle_migrations');
+const [connectionNoDatabase, dbNoDatabase] = await connect();
+
+await connectionNoDatabase.query('DROP DATABASE IF EXISTS test1');
+await connectionNoDatabase.query('CREATE DATABASE test1');
+
+const [connection, db] = await connect("test1");
 
 await migrate(db, { migrationsFolder: 'test/test1/migrations' });
 
