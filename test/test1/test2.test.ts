@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 
 import { connection, db } from '../db';
 import { users } from './schema';
-import { migrate } from 'drizzle-orm/mysql2/migrator';
+import { migrate } from '@drodrigues4/drizzle-orm/mysql2/migrator';
 
 
 await connection.query('DROP TABLE IF EXISTS users');

@@ -2,9 +2,9 @@ import { expect, test, describe } from 'vitest'
 
 import { connection, db } from '../db';
 import { users, messages } from './schema';
-import { migrate } from 'drizzle-orm/mysql2/migrator';
+import { migrate } from '@drodrigues4/drizzle-orm/mysql2/migrator';
 
-import { eq } from 'drizzle-orm';
+import { eq } from '@drodrigues4/drizzle-orm';
 
 await connection.query('DROP TABLE IF EXISTS users');
 await connection.query('DROP TABLE IF EXISTS messages');

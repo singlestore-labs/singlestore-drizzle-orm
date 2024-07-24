@@ -1,1 +1,1 @@
-export * from 'drizzle-orm/mysql2';
+export * from '@drodrigues4/drizzle-orm/mysql2';

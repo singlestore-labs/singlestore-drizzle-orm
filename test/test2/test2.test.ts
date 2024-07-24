@@ -1,6 +1,6 @@
 import { expect, test, describe } from 'vitest'
 
-import { index, int, singlestoreTable, bigint, varchar } from '../../src/singlestore-core';
+import { index, int, singlestoreTable, bigint, varchar } from '@drodrigues4/drizzle-orm/singlestore-core';
 
 test('should not be able to add references', async () => {
 	const users = singlestoreTable('users', 

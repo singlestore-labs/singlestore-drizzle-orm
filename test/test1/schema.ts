@@ -1,6 +1,6 @@
-import { sql } from 'drizzle-orm';
-import { uuid } from '../../src/columns/uuid';
-import { index, singlestoreTable, bigint, varchar, datetime } from '../../src/singlestore-core';
+import { sql } from '@drodrigues4/drizzle-orm';
+import { uuid } from '@drodrigues4/drizzle-orm/singlestore-core/columns/uuid';
+import { index, singlestoreTable, bigint, varchar, datetime } from '@drodrigues4/drizzle-orm/singlestore-core';
 
 export const users = singlestoreTable('users', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
