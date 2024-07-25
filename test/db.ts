@@ -8,18 +8,7 @@ export async function connect(database: string | undefined = undefined): Promise
         throw new Error('UNITTEST_PORT is not defined');
     }
 
-    var connection
-
-    if (!database) {
-        connection = await mysql.createConnection({
-            host: process.env.UNITTEST_HOST,
-            port: parseInt(process.env.UNITTEST_PORT),
-            user: process.env.UNITTEST_USER,
-            password: process.env.UNITTEST_PASSWORD,
-            multipleStatements: false,
-        });
-    } else {
-        connection = await mysql.createConnection({
+    const connection = await mysql.createConnection({
             host: process.env.UNITTEST_HOST,
             port: parseInt(process.env.UNITTEST_PORT),
             user: process.env.UNITTEST_USER,
@@ -27,7 +16,6 @@ export async function connect(database: string | undefined = undefined): Promise
             database: database,
             multipleStatements: false,
         });
-    }
     
     const db = drizzle(connection, { schema, mode: "default"})
     
