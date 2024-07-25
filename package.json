@@ -11,8 +11,8 @@
     "postinstall": "ln -s @drodrigues4/drizzle-orm node_modules/drizzle-orm",
     "test": "vitest --no-file-parallelism",
     "start": "npx tsx src/index.ts",
-    "generate": "npx drizzle-kit generate --config app/drizzle.config.ts",
-    "migrate": "npx tsx app/src/migrate.ts"
+    "generate": "npx drizzle-kit generate --config drizzle.config.ts",
+    "migrate": "npx tsx migrate.ts"
   },
   "repository": {
     "type": "git",

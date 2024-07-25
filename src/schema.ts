@@ -1,4 +1,3 @@
-import { relations } from "@drodrigues4/drizzle-orm";
 import {
   bigint,
   datetime,

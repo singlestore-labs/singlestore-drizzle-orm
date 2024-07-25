@@ -3,12 +3,12 @@ import { defineConfig } from 'drizzle-kit';
 export default defineConfig({
     dialect: 'mysql',
     dbCredentials: {
-        host: 'svc-5e48bb1e-b3bc-4a9d-be77-d9ac46c59315-dml.aws-virginia-5.svc.singlestore.com',
-        port: 3306,
-        user: 'admin',
-        password: 'lqA6aQebwzWMzJ3y1QLp6MAo9vHntJ9L',
-        database: 'testdb_drizzle_orm'
+        host: process.env.TESTAPP_HOST as string,
+        port: parseInt(process.env.TESTAPP_PORT as string),
+        user: process.env.TESTAPP_USER,
+        password: process.env.TESTAPP_PASSWORD,
+        database: 'testapp_db'
     },
-    schema: "app/src/schema.ts",
-    out: "app/migrations"
+    schema: "src/schemaMigrate.ts",
+    out: "migrations"
 });
