@@ -47,13 +47,10 @@ describe('attach and detach', async () => {
 		result = await dbNoDatabase.attach(dbName);
 	}, 30 * 1000);
 
-	test<LocalTestContext>('should detach and attach database with milestones', async ({db, dbNoDatabase}) => {
+	test<LocalTestContext>('should detach and attach database with milestones', async ({dbName, dbName_old, db, dbNoDatabase}) => {
 		if (!process.env.UNITTEST_PORT) {
 			throw new Error('UNITTEST_PORT is not defined');
 		}
-
-		const dbName = process.env.UNITTEST_DATABASE as string
-		const dbName_old = `${dbName}_old`
 
 		var result
 
@@ -134,12 +131,10 @@ describe('attach and detach', async () => {
 		]);
 	}, 60 * 1000);
 
-	test<LocalTestContext>('should detach and attach database with times', async ({connection, db, dbNoDatabase}) => {
+	test<LocalTestContext>('should detach and attach database with times', async ({dbName, connection, db, dbNoDatabase}) => {
 		if (!process.env.UNITTEST_PORT) {
 			throw new Error('UNITTEST_PORT is not defined');
 		}
-
-		const dbName = process.env.UNITTEST_DATABASE as string
 
 		var result
 
@@ -211,12 +206,10 @@ describe('attach and detach', async () => {
 		]);
 	}, 30 * 1000);
 
-	test<LocalTestContext>('should use create and drop milestones', async ({db, dbNoDatabase}) => {
+	test<LocalTestContext>('should use create and drop milestones', async ({dbName, db, dbNoDatabase}) => {
 		if (!process.env.UNITTEST_PORT) {
 			throw new Error('UNITTEST_PORT is not defined');
 		}
-
-		const dbName = process.env.UNITTEST_DATABASE as string
 
 		var result
 

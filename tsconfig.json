@@ -15,7 +15,8 @@
     "test/index.ts",
     "app/src/db.ts",
     "test/migrate.ts",
-    "test/test1/schema.ts"
+    "test/test1/schema.ts",
+    "src/migrate.ts"
   ],
   "exclude": ["node_modules"]
 }

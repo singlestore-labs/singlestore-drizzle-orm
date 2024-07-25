@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest --no-file-parallelism",
-    "start": "npx tsx app/src/index.ts",
+    "start": "npx tsx src/index.ts",
     "generate": "npx drizzle-kit generate --config app/drizzle.config.ts",
     "migrate": "npx tsx app/src/migrate.ts"
   },
@@ -39,6 +39,7 @@
   "dependencies": {
     "@drodrigues4/drizzle-orm": "latest",
     "drizzle-orm": "^0.32.1",
+    "express": "^4.19.2",
     "mysql2": "3.10.3",
     "ts-node": "10.9.2",
     "typescript": "5.5.3"

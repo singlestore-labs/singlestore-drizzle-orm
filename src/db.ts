@@ -1,4 +1,4 @@
-import { drizzle } from '../../src/singlestore';
+import { drizzle } from '@drodrigues4/drizzle-orm/singlestore';
 import mysql from 'mysql2/promise';
 import * as schema from './schema';
 
@@ -11,7 +11,7 @@ export const connection = await mysql.createConnection({
     port: parseInt(process.env.TESTAPP_PORT),
     user: process.env.TESTAPP_USER,
     password: process.env.TESTAPP_PASSWORD,
-    database: process.env.TESTAPP_DATABASE,
+    database: "testapp_db",
     multipleStatements: false,
 });
 
