@@ -6,6 +6,7 @@ import { users } from './schema';
 import { drizzle } from '@drodrigues4/drizzle-orm/singlestore';
 import * as schema from './schema';
 import mysql from 'mysql2/promise';
+import { DrizzleError } from '@drodrigues4/drizzle-orm';
 
 interface LocalTestContext {
 	connectionNoDatabase: mysql.Connection;
@@ -288,4 +289,38 @@ describe('attach and detach', async () => {
 			{fullName: 'Rick'},
 		]);
 	}, 60 * 1000);
+
+	test<LocalTestContext>('should not be able to attach at time and at milestone', async ({dbNoDatabase}) => {
+		expect(() => {
+			dbNoDatabase.attach("testdb_drizzle_orm")
+				.atTime(new Date("2021-01-01T00:00:00.000Z"))
+				.atMilestone("old_milestone")
+		}).toThrowError(new DrizzleError({ message: 'Cannot set both time and milestone' }));
+	});
+});
+
+describe('optimize table', async () => {
+	test<LocalTestContext>('optimize table', async ({db}) => {
+		var result
+
+		result = await db.optimizeTable(users);
+
+		result = await db.optimizeTable(users, 'FULL');
+
+		result = await db.optimizeTable(users, 'FLUSH');
+
+		result = await db.optimizeTable(users, 'FIX_ALTER');
+
+		result = await db.optimizeTable(users, 'INDEX');
+
+		result = await db.optimizeTable(users).warmBlobCacheForColumn(users.fullName);
+
+		result = await db.optimizeTable(users).warmBlobCacheForColumn(users.fullName, users.id);
+
+		result = await db.optimizeTable(users).warmBlobCacheForColumn();
+
+		expect(() => {
+			db.optimizeTable(users, 'FULL').warmBlobCacheForColumn(users.fullName);
+		}).toThrowError('Cannot call warmBlobCacheForColumn with an argument');
+	})
 });
