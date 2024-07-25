@@ -1,5 +1,5 @@
-import { bigint, bson, singlestoreTable, varchar } from '@drodrigues4/drizzle-orm/singlestore-core';
-import { blob } from '@drodrigues4/drizzle-orm/singlestore-core/columns/blob';
+import { bigint, bson, singlestoreTable, varchar } from 'drizzle-orm/singlestore-core';
+import { blob } from 'drizzle-orm/singlestore-core/columns/blob';
 
 export const users = singlestoreTable('users', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),

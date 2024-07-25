@@ -1,12 +1,12 @@
 import { beforeEach, expect, test, describe } from 'vitest'
 
 import { connect } from '../db';
-import { migrate } from '@drodrigues4/drizzle-orm/singlestore/migrator';
+import { migrate } from 'drizzle-orm/singlestore/migrator';
 import { users } from './schema';
-import { drizzle } from '@drodrigues4/drizzle-orm/singlestore';
+import { drizzle } from 'drizzle-orm/singlestore';
 import * as schema from './schema';
 import mysql from 'mysql2/promise';
-import { DrizzleError } from '@drodrigues4/drizzle-orm';
+import { DrizzleError } from 'drizzle-orm';
 
 interface LocalTestContext {
 	connectionNoDatabase: mysql.Connection;

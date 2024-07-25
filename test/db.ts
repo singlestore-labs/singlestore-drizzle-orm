@@ -1,4 +1,4 @@
-import { drizzle } from '@drodrigues4/drizzle-orm/singlestore';
+import { drizzle } from 'drizzle-orm/singlestore';
 
 import mysql from 'mysql2/promise';
 import * as schema from './test1/schema';
