@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "eb10b35f-7856-46fb-993d-a6e41a4e5a0d",
+  "id": "1b4e19b2-8dd0-426c-a62d-e7892dd65c2d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "comment": {
@@ -20,7 +20,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "(now())"
+          "default": "now(6)"
         },
         "content": {
           "name": "content",
@@ -79,7 +79,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "(now())"
+          "default": "now(6)"
         },
         "content": {
           "name": "content",

@@ -1,6 +1,6 @@
 CREATE TABLE `comment` (
 	`id` bigint AUTO_INCREMENT NOT NULL,
-	`created_on` timestamp(6) NOT NULL DEFAULT now(),
+	`created_on` timestamp(6) NOT NULL DEFAULT now(6),
 	`content` varchar(256) NOT NULL,
 	`user_id` bigint NOT NULL,
 	`post_id` bigint NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE `comment` (
 --> statement-breakpoint
 CREATE TABLE `post` (
 	`id` bigint AUTO_INCREMENT NOT NULL,
-	`created_on` timestamp(6) NOT NULL DEFAULT now(),
+	`created_on` timestamp(6) NOT NULL DEFAULT now(6),
 	`content` varchar(256) NOT NULL,
 	`creator_id` bigint NOT NULL,
 	CONSTRAINT `post_id` PRIMARY KEY(`id`)

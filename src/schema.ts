@@ -4,7 +4,7 @@ import {
   singlestoreTable,
   timestamp,
   varchar,
-} from "@drodrigues4/drizzle-orm/singlestore-core";
+} from "drizzle-orm/singlestore-core";
 
 export const user = singlestoreTable('user', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
