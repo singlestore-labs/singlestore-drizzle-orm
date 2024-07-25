@@ -8,6 +8,7 @@
   },
   "type": "module",
   "scripts": {
+    "postinstall": "ln -s @drodrigues4/drizzle-orm node_modules/drizzle-orm",
     "test": "vitest --no-file-parallelism",
     "start": "npx tsx src/index.ts",
     "generate": "npx drizzle-kit generate --config app/drizzle.config.ts",
@@ -38,7 +39,6 @@
   },
   "dependencies": {
     "@drodrigues4/drizzle-orm": "latest",
-    "drizzle-orm": "^0.32.1",
     "express": "^4.19.2",
     "mysql2": "3.10.3",
     "ts-node": "10.9.2",
