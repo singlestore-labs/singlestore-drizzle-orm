@@ -6,18 +6,18 @@ import { migrate } from 'drizzle-orm/singlestore/migrator';
 
 import { eq } from 'drizzle-orm';
 
-const [connectionNoDatabase, dbNoDatabase] = await connect();
+const [connectionNoDatabase] = await connect();
 
 await connectionNoDatabase.query('DROP DATABASE IF EXISTS test1');
 await connectionNoDatabase.query('CREATE DATABASE test1');
 
-const [connection, db] = await connect("test1");
+const [, db] = await connect("test1");
 
 await migrate(db, { migrationsFolder: 'test/test1/migrations' });
 
 describe('users', () => {
 	test('should insert a user', async () => {
-		const result = await db.insert(users).values({ fullName: 'Morty' });
+		const result = await db.insert(users).values({ name: 'Morty', age: 14 });
 		expect(result).toEqual([
 			{
 				fieldCount: 0,
@@ -34,8 +34,8 @@ describe('users', () => {
 
 	test('should get users', async () => {
 		const [result] = await db.select().from(users);
-		expect(result.extID).toMatch(/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/)
-		expect(result.fullName).toEqual("Morty")
+		expect(result.name).toEqual("Morty")
+		expect(result.age).toEqual(14)
 	});
 });
 

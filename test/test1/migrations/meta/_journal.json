@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1721663512449,
-      "tag": "0000_mean_black_queen",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1721669652607,
-      "tag": "0001_mature_skin",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1721674081013,
-      "tag": "0002_kind_dark_phoenix",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1721907277999,
-      "tag": "0003_condemned_mole_man",
+      "when": 1721918811860,
+      "tag": "0000_striped_peter_quill",
       "breakpoints": true
     }
   ]
