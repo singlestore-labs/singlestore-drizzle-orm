@@ -1,7 +1,7 @@
 import express, {Request, Response} from "express"
 import {StatusCodes} from "http-status-codes"
 import { connect } from "./db"
-import { post } from "./schema"
+import { comment, post } from "./schema"
 
 export const router = express.Router()
 
@@ -16,15 +16,36 @@ router.put("/post", async (req : Request, res : Response) => {
 		res.status(StatusCodes.OK).send();
 	} catch (e) {
 		res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+		console.log(e);
 	}
 })
 
 router.get("/post", async (req : Request, res : Response) => {
 	try {
-		const posts = await db.select().from(post).execute();
+		const posts = await db.query.post.findMany({
+			with: {
+				comments: true,
+			},
+		});
 
 		res.status(StatusCodes.OK).json(posts);
 	} catch (e) {
 		res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+		console.log(e);
+	}
+})
+
+router.put("/comment", async (req : Request, res : Response) => {
+	try {
+		await db.insert(comment).values({
+			postId: req.body.postId,
+			repliesToComment: req.body.repliesToCommentId,
+			content: req.body.content
+		}).execute();
+
+		res.status(StatusCodes.OK).send();
+	} catch (e) {
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+		console.log(e);
 	}
 })

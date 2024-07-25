@@ -6,6 +6,8 @@ import {
   varchar,
 } from "drizzle-orm/singlestore-core";
 
+import { relations } from 'drizzle-orm';
+
 export const post = singlestoreTable('post', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   createdOn: timestamp('created_on', { fsp: 6 }).defaultNow(6),
@@ -25,3 +27,14 @@ export const comment = singlestoreTable('comment', {
 
 export type Comment = typeof comment.$inferSelect; // return type when queried
 export type NewComment = typeof comment.$inferInsert; // insert type
+
+export const postsRelations = relations(post, ({ many }) => ({
+  comments: many(comment),
+}));
+
+export const commentsRelations = relations(comment, ({ one }) => ({
+  post: one(post, {
+    fields: [comment.postId],
+    references: [post.id],
+  }),
+}));
