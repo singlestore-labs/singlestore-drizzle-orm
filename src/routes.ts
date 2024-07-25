@@ -1,14 +1,30 @@
 import express, {Request, Response} from "express"
 import {StatusCodes} from "http-status-codes"
+import { connect } from "./db"
+import { post } from "./schema"
 
 export const router = express.Router()
 
-router.put("/user", async (req : Request, res : Response) => {
-	
+const [connection, db] = await connect()
 
-    // try {
-    //     return res.status(StatusCodes.OK).json({ message: "Hello World!" })
-    // } catch (error) {
-    //     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error})
-    // }
+router.put("/post", async (req : Request, res : Response) => {
+	try {
+		await db.insert(post).values({
+			content: req.body.content
+		}).execute();
+
+		res.status(StatusCodes.OK).send();
+	} catch (e) {
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+	}
+})
+
+router.get("/post", async (req : Request, res : Response) => {
+	try {
+		const posts = await db.select().from(post).execute();
+
+		res.status(StatusCodes.OK).json(posts);
+	} catch (e) {
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+	}
 })

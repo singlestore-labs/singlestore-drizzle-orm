@@ -1,0 +1,96 @@
+html {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+}
+
+h1 {
+  font-size: 36pt;
+  color: #333;
+  margin: 30px 0 10px 0;
+}
+
+h2 {
+  font-size: 16pt;
+  font-weight: normal;
+  color: #666;
+}
+
+body {
+  margin: 0 auto;
+  padding: 0;
+  height: 100vh;
+  background-color: #f0f0f0;
+  max-width: 1000px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  text-align: center;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.scrollable {
+  overflow-y: scroll;
+  flex: 1;
+
+  margin: 20px 0;
+  padding: 20px;
+
+  text-align: left;
+}
+
+form.new-post {
+  display: flex;
+}
+
+form.new-post input {
+  flex: 1;
+
+  padding: 16px 24px;
+
+  margin: 20px 0 40px 0;
+
+  font-size: 18px;
+}
+
+.scrollable,
+form.new-post input,
+form.new-post button {
+  border-radius: 32px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: none;
+  background-color: #fff;
+}
+
+form.new-post button {
+  width: 64px;
+  height: 64px;
+  font-weight: bold;
+  font-size: 20pt;
+  margin: 20px 0 40px 20px;
+}
+
+.post {
+  margin: 0 0 15px 0;
+  padding: 13px 19px;
+
+  border-radius: 26px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: rgb(198, 221, 255);
+}
+
+.post p {
+  margin: 0;
+}
+
+p.date {
+  font-size: 12px;
+  margin: 10px 0 0 0;
+  color: #666;
+}
