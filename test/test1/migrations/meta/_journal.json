@@ -8,6 +8,13 @@
       "when": 1721918811860,
       "tag": "0000_striped_peter_quill",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1721930025548,
+      "tag": "0001_mean_paladin",
+      "breakpoints": true
     }
   ]
 }

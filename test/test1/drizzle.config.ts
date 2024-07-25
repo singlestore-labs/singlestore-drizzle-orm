@@ -1,5 +1,5 @@
 // Run
-// npx drizzle-kit generate --config test/test1/drizzle.config.ts 
+// npx drizzle-kit generate --config test/test2/drizzle.config.ts 
 // to generate the migrations folder for test1.
 
 import { defineConfig } from 'drizzle-kit';
@@ -7,11 +7,11 @@ import { defineConfig } from 'drizzle-kit';
 export default defineConfig({
     dialect: 'mysql',
     dbCredentials: {
-        host: 'svc-5e48bb1e-b3bc-4a9d-be77-d9ac46c59315-dml.aws-virginia-5.svc.singlestore.com',
-        port: 3306,
-        user: 'admin',
-        password: 'lqA6aQebwzWMzJ3y1QLp6MAo9vHntJ9L',
-        database: 'testdb_drizzle_orm'
+        host: process.env.UNITTEST_HOST as string,
+        port: parseInt(process.env.UNITTEST_PORT as string),
+        user: process.env.UNITTEST_USER as string,
+        password: process.env.UNITTEST_PASSWORD as string,
+        database: process.env.UNITTEST_DATABASE as string
     },
     schema: "test/test1/schema.ts",
     out: "test/test1/migrations"

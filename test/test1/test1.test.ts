@@ -2,7 +2,7 @@ import { expect, test, describe } from 'vitest'
 
 import { connect } from '../db';
 import { users, messages } from './schema';
-import { migrate } from 'drizzle-orm/singlestore/migrator';
+import { migrate } from '@drodrigues4/drizzle-orm/singlestore/migrator';
 
 import { eq } from 'drizzle-orm';
 
