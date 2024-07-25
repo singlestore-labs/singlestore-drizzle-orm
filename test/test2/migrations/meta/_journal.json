@@ -15,6 +15,13 @@
       "when": 1721927194305,
       "tag": "0001_ordinary_longshot",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1721928298013,
+      "tag": "0002_glamorous_anthem",
+      "breakpoints": true
     }
   ]
 }

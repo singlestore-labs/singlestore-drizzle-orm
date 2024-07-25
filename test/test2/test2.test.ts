@@ -1,10 +1,9 @@
-import { expect, test, describe } from 'vitest'
+import { describe, expect, test } from 'vitest';
 
-import { BSON } from 'bson';
 
+import { migrate } from '@drodrigues4/drizzle-orm/singlestore/migrator';
 import { connect } from '../db';
 import { users } from './schema';
-import { migrate } from 'drizzle-orm/singlestore/migrator';
 
 const [connectionNoDatabase] = await connect();
 
@@ -18,7 +17,8 @@ await migrate(db, { migrationsFolder: 'test/test2/migrations' });
 describe('users', () => {
 	test('should insert a user with a bson', async () => {
 		const bsonTest = { a: 1, b: 2, c: 3 };
-		const newUser = { name: 'Rick', age: 14, bsonCol: bsonTest };
+		const blobTest = Buffer.from('hello world');
+		const newUser = { name: 'Rick', age: 14, bsonCol: bsonTest, blobCol: blobTest };
 
 		const result = await db.insert(users).values(newUser);
 		
@@ -40,7 +40,12 @@ describe('users', () => {
 		const [result] = await db.select().from(users);
 		expect(result.name).toEqual("Rick");
 		expect(result.age).toEqual(14);
+		
 		const bsonResult = result.bsonCol;
 		expect(bsonResult).toEqual({ a: 1, b: 2, c: 3 });
+		
+		const blobResult = result.blobCol as Buffer;
+		console.log(blobResult.toString());
+		expect(blobResult).toEqual(Buffer.from('hello world'));
 	});
 });
