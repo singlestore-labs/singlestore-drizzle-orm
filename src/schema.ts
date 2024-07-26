@@ -3,6 +3,7 @@ import {
   singlestoreTable,
   datetime,
   text,
+  fulltext,
 } from "drizzle-orm/singlestore-core";
 
 import { relations } from 'drizzle-orm';
@@ -11,6 +12,10 @@ export const post = singlestoreTable('post', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   createdOn: datetime('created_on', { fsp: 6 }).notNull().defaultNow(6),
   content: text('content').notNull(),
+}, (table) => {
+  return {
+    postFullTextIdx: fulltext('postFullTextIdx', { version: 2 }).on(table.content)
+  } 
 });
 
 export type Post = typeof post.$inferSelect; // return type when queried
@@ -22,6 +27,10 @@ export const comment = singlestoreTable('comment', {
   content: text('content').notNull(),
   postId: bigint('post_id', { mode: 'number' }).notNull(),
   repliesToComment: bigint('replies_to_comment', { mode: 'number' }),
+}, (table) => {
+  return {
+    commentFullTextIdx: fulltext('commentFullTextIdx', { version: 2 }).on(table.content)
+  }
 });
 
 export type Comment = typeof comment.$inferSelect; // return type when queried

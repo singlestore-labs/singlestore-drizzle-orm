@@ -2,7 +2,8 @@ import express, {Request, Response} from "express"
 import {StatusCodes} from "http-status-codes"
 import { connect } from "./db"
 import { comment, post } from "./schema"
-import { asc } from "@drodrigues4/drizzle-orm"
+import { asc } from "drizzle-orm"
+import { match } from "drizzle-orm/singlestore-core"
 
 export const router = express.Router()
 
@@ -93,6 +94,21 @@ router.get("/post", async (_, res : Response) => {
 	}
 })
 
+router.get("/post/search", async (req : Request, res : Response) => {
+	const searchResultsLimits = req.query.limit ? parseInt(req.query.limit as string) : 100;
+
+	try {
+		const search = req.query.search as string
+
+		const posts = await db.select().from(post).where(match(post, `content:${search}`)).limit(searchResultsLimits)
+
+		res.status(StatusCodes.OK).json(posts);
+	} catch (e) {
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+		console.error(e);
+	}
+})
+
 router.put("/comment", async (req : Request, res : Response) => {
 	try {
 		await db.insert(comment).values({
@@ -102,6 +118,21 @@ router.put("/comment", async (req : Request, res : Response) => {
 		});
 
 		res.status(StatusCodes.OK).send();
+	} catch (e) {
+		res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+		console.error(e);
+	}
+})
+
+router.get("/comment/search", async (req : Request, res : Response) => {
+	const searchResultsLimits = req.query.limit ? parseInt(req.query.limit as string) : 100;
+
+	try {
+		const search = req.query.search
+
+		const comments = await db.select().from(comment).where(match(comment, `content:${search}`)).limit(searchResultsLimits)
+
+		res.status(StatusCodes.OK).json(comments);
 	} catch (e) {
 		res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
 		console.error(e);
