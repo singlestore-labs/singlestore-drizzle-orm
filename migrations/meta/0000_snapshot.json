@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "7b793f6f-b1e4-4316-b246-5daa61f143a9",
+  "id": "30248733-6be2-4300-a16b-0c7ba0a8f2f3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "comment": {
@@ -16,7 +16,7 @@
         },
         "created_on": {
           "name": "created_on",
-          "type": "timestamp(6)",
+          "type": "datetime(6)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -24,7 +24,7 @@
         },
         "content": {
           "name": "content",
-          "type": "varchar(256)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -68,7 +68,7 @@
         },
         "created_on": {
           "name": "created_on",
-          "type": "timestamp(6)",
+          "type": "datetime(6)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
@@ -76,7 +76,7 @@
         },
         "content": {
           "name": "content",
-          "type": "varchar(256)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
