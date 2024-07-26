@@ -2,7 +2,7 @@ import express from "express"
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { router } from "./routes"
+import { router } from "./api/routes"
 
 const PORT = 8000
 

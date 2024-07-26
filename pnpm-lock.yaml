@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@drodrigues4/drizzle-orm':
         specifier: latest
-        version: 0.32.1-893caa4dfe1ffbfdd4e75a874b99e54bcd420ce3(mysql2@3.10.3)
+        version: 0.32.1-5d01131afaa051542ab503561b8a539023b9f31a(mysql2@3.10.3)
       bson:
         specifier: ^6.8.0
         version: 6.8.0
@@ -77,8 +77,8 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@drodrigues4/drizzle-orm@0.32.1-893caa4dfe1ffbfdd4e75a874b99e54bcd420ce3':
-    resolution: {integrity: sha512-yRaKpeUWbTSrO3Fomt6qFN4t6qhccZG6K1XFG1Vnh8yfqFYK97bWLSj2C1TaCjfwWUmK0ilg22rKELMnIQgvwA==}
+  '@drodrigues4/drizzle-orm@0.32.1-5d01131afaa051542ab503561b8a539023b9f31a':
+    resolution: {integrity: sha512-KgFSRN51F+dQ50TUfIgn9a/5vR8/+Dj3amzwLJx6N+jokBTkxNQKMFiSUB2pe61e7ngPn5HluNkhlV9ckRTgtA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -1558,7 +1558,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@drodrigues4/drizzle-orm@0.32.1-893caa4dfe1ffbfdd4e75a874b99e54bcd420ce3(mysql2@3.10.3)':
+  '@drodrigues4/drizzle-orm@0.32.1-5d01131afaa051542ab503561b8a539023b9f31a(mysql2@3.10.3)':
     optionalDependencies:
       mysql2: 3.10.3
 
