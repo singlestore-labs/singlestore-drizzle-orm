@@ -15,10 +15,17 @@ app.use(express.json())
 app.use(express.urlencoded({extended : true}))
 
 // Serve the static files
-app.use(express.static(path.join(__dirname, 'public')));
+/* route requests for static files to appropriate directory */
+app.use('/', express.static(__dirname + '/public'))
+
 
 // Serve the API
 app.use("/api", router)
+
+/* final catch-all route to index.html defined last */
+app.get('/*', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`)
