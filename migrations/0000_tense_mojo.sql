@@ -13,3 +13,7 @@ CREATE TABLE `post` (
 	`content` text NOT NULL,
 	CONSTRAINT `post_id` PRIMARY KEY(`id`)
 );
+--> statement-breakpoint
+ALTER TABLE `post` ADD FULLTEXT USING VERSION 2 postFullTextIdx (`content`);
+--> statement-breakpoint
+ALTER TABLE `comment` ADD FULLTEXT USING VERSION 2 commentFullTextIdx (`content`);
