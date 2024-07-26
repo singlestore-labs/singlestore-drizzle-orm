@@ -1,9 +1,8 @@
 import { bigint, datetime, int, mysqlTable, serial, text, varchar } from '@drodrigues4/drizzle-orm/mysql-core';
 
 export const users = mysqlTable('users', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  age: int('age'),
+  id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+  fullName: varchar('name', { length: 256 }),
 });
 
 export type User = typeof users.$inferSelect; // return type when queried

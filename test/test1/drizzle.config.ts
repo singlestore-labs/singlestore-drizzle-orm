@@ -1,5 +1,5 @@
 // Run
-// npx drizzle-kit generate --config test/test2/drizzle.config.ts 
+// npx drizzle-kit generate --config test/test1/drizzle.config.ts 
 // to generate the migrations folder for test1.
 
 import { defineConfig } from 'drizzle-kit';

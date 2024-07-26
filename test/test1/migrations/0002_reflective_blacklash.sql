@@ -5,10 +5,3 @@ CREATE TABLE `messages` (
 	`created_at` datetime,
 	CONSTRAINT `messages_id` PRIMARY KEY(`id`)
 );
---> statement-breakpoint
-CREATE TABLE `users` (
-	`id` serial AUTO_INCREMENT NOT NULL,
-	`name` text NOT NULL,
-	`age` int,
-	CONSTRAINT `users_id` PRIMARY KEY(`id`)
-);

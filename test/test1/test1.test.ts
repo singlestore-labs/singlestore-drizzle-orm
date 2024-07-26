@@ -17,7 +17,7 @@ await migrate(db, { migrationsFolder: 'test/test1/migrations' });
 
 describe('users', () => {
 	test('should insert a user', async () => {
-		const result = await db.insert(users).values({ name: 'Morty', age: 14 });
+		const result = await db.insert(users).values({ fullName: 'Morty' });
 		expect(result).toEqual([
 			{
 				fieldCount: 0,
@@ -34,8 +34,7 @@ describe('users', () => {
 
 	test('should get users', async () => {
 		const [result] = await db.select().from(users);
-		expect(result.name).toEqual("Morty")
-		expect(result.age).toEqual(14)
+		expect(result.fullName).toEqual("Morty")
 	});
 });
 

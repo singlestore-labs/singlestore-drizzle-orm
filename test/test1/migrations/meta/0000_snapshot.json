@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "eb665fb1-1946-4c63-8e9e-8d91a8ec6f8e",
-  "prevId": "623dee63-e2f7-4039-a529-d4cda536f763",
+  "id": "623dee63-e2f7-4039-a529-d4cda536f763",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
       "name": "users",
@@ -17,6 +17,13 @@
         "name": {
           "name": "name",
           "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "age": {
+          "name": "age",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
