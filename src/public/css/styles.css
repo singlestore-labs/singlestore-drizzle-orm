@@ -1,12 +1,13 @@
-html {
+html,
+body {
   font-family: Arial, sans-serif;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 h1 {
   font-size: 36pt;
   color: #333;
-  margin: 30px 0 10px 0;
+  margin: 20px 0 10px 0;
 }
 
 h2 {
@@ -54,9 +55,9 @@ form.new-post input {
 
   padding: 16px 24px;
 
-  margin: 20px 0 40px 0;
+  margin: 0 0 30px 0;
 
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .scrollable,
@@ -73,46 +74,51 @@ form.new-post button {
   height: 64px;
   font-weight: bold;
   font-size: 20pt;
-  margin: 20px 0 40px 20px;
+  margin: 0 0 30px 20px;
 }
 
 .post-container {
-  margin: 0 0 15px 0;
+  margin: 12px 0 12px 0;
 }
 
 .post {
-  padding: 13px 13px 13px 19px;
-
-  border-radius: 26px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: rgb(198, 221, 255);
 }
 
-.post p {
+.comment {
+  padding: 10px;
+  padding-left: 15px;
+
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.comment p {
   margin: 0;
 }
 
-p.date {
+.comment p.date {
   font-size: 12px;
-  margin: 10px 0 0 0;
+  margin: 0;
+  margin-top: 5px;
   color: #666;
 }
 
-div.comment {
+.comment {
   display: grid;
   grid-template-columns: 1fr auto;
 }
 
 button.reply {
   background-color: rgb(255, 255, 255, 0.7);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  width: 40px;
-  height: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  width: 32px;
+  height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  font-size: 21px;
   border: none;
 }
 
@@ -128,7 +134,7 @@ form.response input {
 
   margin: 15px 0 15px 0;
 
-  font-size: 18px;
+  font-size: 16px;
 }
 
 form.response input,
@@ -149,4 +155,8 @@ form.response button {
 
 .hidden {
   display: none !important;
+}
+
+.indented {
+  margin-left: 50px;
 }

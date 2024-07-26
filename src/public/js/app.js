@@ -11,13 +11,9 @@ function post(event) {
     }),
   })
     .then((response) => {
-      if (response.ok) {
-        return response.json();
+      if (!response.ok) {
+        throw new Error("Request failed.");
       }
-      throw new Error("Request failed.");
-    })
-    .then((data) => {
-      console.log(data);
       getPosts();
     })
     .catch((error) => {
@@ -46,23 +42,29 @@ function getPosts() {
       data.forEach((post) => {
         const div = document.createElement("div");
         div.classList.add("post-container");
-        div.id = post.id;
+        div.id = `post-${post.id}`;
 
-        div.innerHTML = `
-			<div class="comment post">
-				<div>
-					<p class="content">${post.content}</p>
-					<p class="date">${post.createdOn}</p>
-				</div>
-				<button class="reply" onclick="switchReplyVisibility(${post.id})">🡇</div>
-			</div>
-			<form class="response hidden" onsubmit="return comment(event)">
-				<input class="hidden" type="text" name="postId" value="${post.id}" />
-				<input class="hidden" type="text" name="commentId" value="" />
-				<input type="text" name="text" id="text" placeholder="Add a comment" />
-				<button type="submit">✉</button>
-			</form>
-		`;
+        commentHTML = `
+          <div class="comment post">
+            <div>
+              <p class="content">${post.content}</p>
+              <p class="date">${post.createdOn}</p>
+            </div>
+            <button class="reply" onclick="switchReplyVisibility('post-${post.id}')">🡇</button>
+          </div>
+          <form class="response hidden" onsubmit="return commentCreate(event)">
+            <input class="hidden" type="text" name="postId" value="${post.id}" />
+            <input class="hidden" type="text" name="commentId" value="" />
+            <input type="text" name="text" id="text" placeholder="Add a comment" />
+            <button type="submit">✉</button>
+          </form>
+        `;
+
+        for (comment of post.comments) {
+          commentHTML += getHTMLForIndentedComment(comment);
+        }
+
+        div.innerHTML = commentHTML;
 
         scrollable.appendChild(div);
       });
@@ -72,12 +74,42 @@ function getPosts() {
     });
 }
 
-function switchReplyVisibility(postId) {
-  const postContainerEl = document.getElementById(postId);
+function getHTMLForIndentedComment(comment) {
+  commentHTML = `
+    <div class="comment">
+      <div>
+        <p class="content">${comment.content}</p>
+        <p class="date">${comment.createdOn}</p>
+      </div>
+      <button class="reply" onclick="switchReplyVisibility('comment-${comment.id}')">🡇</button>
+    </div>
+    <form class="response hidden" onsubmit="return commentCreate(event)">
+      <input class="hidden" type="text" name="postId" value="${comment.postId}" />
+      <input class="hidden" type="text" name="commentId" value="${comment.id}" />
+      <input type="text" name="text" id="text" placeholder="Add a comment" />
+      <button type="submit">✉</button>
+    </form>
+  `;
 
-  const buttonEl = postContainerEl.getElementsByClassName("reply")[0];
+  if (comment.comments != undefined) {
+    for (reply of comment.comments) {
+      commentHTML += getHTMLForIndentedComment(reply);
+    }
+  }
 
-  const responseEl = postContainerEl.getElementsByClassName("response")[0];
+  return `
+    <div class="post-container indented" id="comment-${comment.id}">
+      ${commentHTML}
+    </div>
+  `;
+}
+
+function switchReplyVisibility(commentId) {
+  const commentContainerEl = document.getElementById(commentId);
+
+  const buttonEl = commentContainerEl.getElementsByClassName("reply")[0];
+
+  const responseEl = commentContainerEl.getElementsByClassName("response")[0];
 
   if (responseEl.classList.contains("hidden")) {
     responseEl.classList.remove("hidden");
@@ -88,9 +120,11 @@ function switchReplyVisibility(postId) {
   }
 }
 
-function comment(event) {
+function commentCreate(event) {
   text = event.target.elements.text.value;
+
   postId = event.target.elements.postId.value;
+
   commentId =
     event.target.elements.commentId.value == ""
       ? undefined
@@ -108,13 +142,9 @@ function comment(event) {
     }),
   })
     .then((response) => {
-      if (response.ok) {
-        return response.json();
+      if (!response.ok) {
+        throw new Error("Request failed.");
       }
-      throw new Error("Request failed.");
-    })
-    .then((data) => {
-      console.log(data);
       getPosts();
     })
     .catch((error) => {
