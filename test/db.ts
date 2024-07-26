@@ -13,7 +13,7 @@ export async function connect(database: string | undefined = undefined): Promise
             port: parseInt(process.env.UNITTEST_PORT),
             user: process.env.UNITTEST_USER,
             password: process.env.UNITTEST_PASSWORD,
-            database: database,
+            database,
             multipleStatements: false,
         });
     
