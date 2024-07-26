@@ -45,7 +45,6 @@ describe('users', () => {
 		expect(bsonResult).toEqual({ a: 1, b: 2, c: 3 });
 		
 		const blobResult = result.blobCol as Buffer;
-		console.log(blobResult.toString());
 		expect(blobResult).toEqual(Buffer.from('hello world'));
 	});
 });

@@ -1,12 +1,10 @@
 import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { connect } from "./db"
+import { db } from "./db"
 import { comment } from './schema';
 import { match } from 'drizzle-orm/singlestore-core';
 
 const commentRouter = express.Router();
-
-const [_, db] = await connect()
 
 commentRouter.put('/', async (req: Request, res: Response) => {
   try {

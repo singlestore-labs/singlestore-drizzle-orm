@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1722037123693,
+      "tag": "0000_tan_grim_reaper",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,13 +1,11 @@
 import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { connect } from "./db"
+import { db } from "./db"
 import { post } from './schema';
 import { asc } from 'drizzle-orm';
 import { match } from 'drizzle-orm/singlestore-core';
 
 const postRouter = express.Router();
-
-const [_, db] = await connect()
 
 postRouter.put('/', async (req: Request, res: Response) => {
   try {
@@ -24,6 +22,7 @@ postRouter.put('/', async (req: Request, res: Response) => {
 
 postRouter.get('/', async (_, res: Response) => {
   try {
+    // @ts-ignore
     const posts = await db.query.post.findMany({
       orderBy: asc(post.createdOn),
       with: {
@@ -57,14 +56,20 @@ postRouter.get('/', async (_, res: Response) => {
     }
 
     for (const post of posts) {
+      // @ts-ignore
       post.comments = post.comments.filter(comment => comment.repliesToComment === null);
     }
 
     const dfs = (u: number) => {
+      if (!u) {
+        return;
+      }
+
       const comment = allComments.get(u);
       if (!adjT.has(u)) {
         return comment;
       }
+
       const replies = adjT.get(u).map((v: number) => dfs(v));
       replies.sort((a: any, b: any) => a.createdOn - b.createdOn);
       comment.comments = replies;
@@ -72,17 +77,21 @@ postRouter.get('/', async (_, res: Response) => {
     };
 
     for (const post of posts) {
+      // @ts-ignore
       post.comments.forEach(comment => dfs(comment.id));
     }
 
+    // @ts-ignore
     const newPosts = posts.map(post => {
       const newPost = {
         ...post,
+        // @ts-ignore
         comments: post.comments.map(comment => {
           const newComment = allComments.get(comment.id);
           return newComment;
         })
       }
+      // @ts-ignore
       newPost.comments.sort((a, b) => a.createdOn - b.createdOn);
       return newPost;
     });

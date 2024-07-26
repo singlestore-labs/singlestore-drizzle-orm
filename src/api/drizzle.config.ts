@@ -7,8 +7,8 @@ export default defineConfig({
         port: parseInt(process.env.TESTAPP_PORT as string),
         user: process.env.TESTAPP_USER,
         password: process.env.TESTAPP_PASSWORD,
-        database: 'testapp_db'
+        database: process.env.TESTAPP_DATABASE as string
     },
-    schema: "src/schemaMigrate.ts",
-    out: "migrations"
+    schema: "src/api/schemaMigrate.ts",
+    out: "src/api/migrations"
 });
