@@ -50,7 +50,7 @@ function getPosts() {
               <p class="content">${post.content}</p>
               <p class="date">${post.createdOn}</p>
             </div>
-            <button class="reply" onclick="switchReplyVisibility('post-${post.id}')">🡇</button>
+            <button class="reply" onclick="switchReplyVisibility('post-${post.id}')">↵</button>
           </div>
           <form class="response hidden" onsubmit="return commentCreate(event)">
             <input class="hidden" type="text" name="postId" value="${post.id}" />
@@ -81,7 +81,7 @@ function getHTMLForIndentedComment(comment) {
         <p class="content">${comment.content}</p>
         <p class="date">${comment.createdOn}</p>
       </div>
-      <button class="reply" onclick="switchReplyVisibility('comment-${comment.id}')">🡇</button>
+      <button class="reply" onclick="switchReplyVisibility('comment-${comment.id}')">↵</button>
     </div>
     <form class="response hidden" onsubmit="return commentCreate(event)">
       <input class="hidden" type="text" name="postId" value="${comment.postId}" />
@@ -113,10 +113,10 @@ function switchReplyVisibility(commentId) {
 
   if (responseEl.classList.contains("hidden")) {
     responseEl.classList.remove("hidden");
-    buttonEl.textContent = "🡅";
+    buttonEl.textContent = "↑";
   } else {
     responseEl.classList.add("hidden");
-    buttonEl.textContent = "🡇";
+    buttonEl.textContent = "↵";
   }
 }
 
