@@ -9,6 +9,7 @@ export const customBlob = <TData>(name: string) =>
     },
     toDriver(value: TData): string {
 		// Convert value to Buffer
+		// @ts-ignore
 		const buffer = Buffer.from(value);
     
 		// Convert Buffer to String
@@ -21,6 +22,7 @@ export const customBlob = <TData>(name: string) =>
 		// Convert string to Buffer
 		const buffer = Buffer.from(value, 'utf-8'); // Specify encoding if needed
     
+		// @ts-ignore
 		return buffer;
 	}
 })(name);
