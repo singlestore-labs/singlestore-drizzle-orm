@@ -23,6 +23,7 @@ router.put("/post", async (req : Request, res : Response) => {
 router.get("/post", async (req : Request, res : Response) => {
 	try {
 		const posts = await db.query.post.findMany({
+			orderBy: (post, { asc }) => [asc(post.createdOn)],
 			with: {
 				comments: true,
 			},
