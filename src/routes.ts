@@ -2,10 +2,11 @@ import express, {Request, Response} from "express"
 import {StatusCodes} from "http-status-codes"
 import { connect } from "./db"
 import { comment, post } from "./schema"
+import { asc } from "@drodrigues4/drizzle-orm"
 
 export const router = express.Router()
 
-const [connection, db] = await connect()
+const [_, db] = await connect()
 
 router.put("/post", async (req : Request, res : Response) => {
 	try {
@@ -20,10 +21,10 @@ router.put("/post", async (req : Request, res : Response) => {
 	}
 })
 
-router.get("/post", async (req : Request, res : Response) => {
+router.get("/post", async (_, res : Response) => {
 	try {
 		const posts = await db.query.post.findMany({
-			orderBy: (post, { asc }) => [asc(post.createdOn)],
+			orderBy: asc(post.createdOn),
 			with: {
 				comments: true,
 			},
