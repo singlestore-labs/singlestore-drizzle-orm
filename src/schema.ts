@@ -3,15 +3,15 @@ import {
   datetime,
   singlestoreTable,
   timestamp,
-  varchar,
+  text,
 } from "drizzle-orm/singlestore-core";
 
 import { relations } from 'drizzle-orm';
 
 export const post = singlestoreTable('post', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
-  createdOn: timestamp('created_on', { fsp: 6 }).defaultNow(6),
-  content: varchar('content', { length: 256 }).notNull(),
+  createdOn: datetime('created_on', { fsp: 6 }).notNull().defaultNow(6),
+  content: text('content').notNull(),
 });
 
 export type Post = typeof post.$inferSelect; // return type when queried
@@ -19,8 +19,8 @@ export type NewPost = typeof post.$inferInsert; // insert type
 
 export const comment = singlestoreTable('comment', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
-  createdOn: timestamp('created_on', { fsp: 6 }).notNull().defaultCurrentTimestamp(6),
-  content: varchar('content', { length: 256 }).notNull(),
+  createdOn: datetime('created_on', { fsp: 6 }).notNull().defaultCurrentTimestamp(6),
+  content: text('content').notNull(),
   postId: bigint('post_id', { mode: 'number' }).notNull(),
   repliesToComment: bigint('replies_to_comment', { mode: 'number' }),
 });

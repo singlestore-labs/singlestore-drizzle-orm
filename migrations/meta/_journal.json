@@ -8,6 +8,13 @@
       "when": 1721955840396,
       "tag": "0000_ordinary_golden_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1722008956231,
+      "tag": "0001_magical_christian_walker",
+      "breakpoints": true
     }
   ]
 }
