@@ -251,11 +251,11 @@ async function search(event) {
   console.log(search);
 
   const [posts, comments] = await Promise.all([
+    fetch(`/api/post/search?search=${encodeURIComponent(search)}&limit=5`).then(
+      (res) => res.json()
+    ),
     fetch(
-      `/api/post/search?search=${encodeURIComponent(search)}&limit=10`
-    ).then((res) => res.json()),
-    fetch(
-      `/api/comment/search?search=${encodeURIComponent(search)}&limit=10`
+      `/api/comment/search?search=${encodeURIComponent(search)}&limit=20`
     ).then((res) => res.json()),
   ]);
 
