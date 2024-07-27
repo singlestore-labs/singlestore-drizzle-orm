@@ -41,7 +41,7 @@ function getPosts(isInit = false) {
     })
     .then((data) => {
       // get element with class scrollable
-      const scrollable = document.querySelector(".scrollable");
+      const scrollable = document.getElementById("posts-container");
       // remove all children
       // while (scrollable.firstChild) {
       //   scrollable.removeChild(scrollable.firstChild);
@@ -232,4 +232,69 @@ function buildContent(content, date) {
   contentContainer.appendChild(dateElement);
 
   return contentContainer;
+}
+
+async function search(event) {
+  event.preventDefault();
+  const search = event.target.elements.text.value;
+
+  if (search == "") {
+    document.getElementById("posts-container").classList.remove("hidden");
+    document.getElementById("search-results").classList.add("hidden");
+
+    return false;
+  } else {
+    document.getElementById("posts-container").classList.add("hidden");
+    document.getElementById("search-results").classList.remove("hidden");
+  }
+
+  console.log(search);
+
+  const [posts, comments] = await Promise.all([
+    fetch(
+      `/api/post/search?search=${encodeURIComponent(search)}&limit=10`
+    ).then((res) => res.json()),
+    fetch(
+      `/api/comment/search?search=${encodeURIComponent(search)}&limit=10`
+    ).then((res) => res.json()),
+  ]);
+
+  console.log(posts);
+  console.log(comments);
+
+  const scrollable = document.getElementById("search-results");
+  while (scrollable.firstChild) {
+    scrollable.removeChild(scrollable.firstChild);
+  }
+
+  const titlePostsEl = document.createElement("h2");
+  titlePostsEl.textContent = "Posts";
+  scrollable.appendChild(titlePostsEl);
+
+  posts.forEach((post) => {
+    post.comments = [];
+
+    const div = document.createElement("div");
+    div.classList.add("post-container");
+    div.id = `post-${post.id}`;
+
+    div.appendChild(buildPost(post));
+    div.appendChild(buildForm(post.id));
+    post.comments.forEach((comment) => {
+      div.appendChild(buildComment(comment));
+    });
+
+    scrollable.appendChild(div);
+  });
+
+  const titleCommentsEl = document.createElement("h2");
+  titleCommentsEl.textContent = "Comments";
+  scrollable.appendChild(titleCommentsEl);
+
+  comments.forEach((comment) => {
+    comment.comments = [];
+    scrollable.appendChild(buildComment(comment));
+  });
+
+  return false;
 }

@@ -36,7 +36,7 @@ postRouter.get('/', async (_, res: Response) => {
   try {
     let posts = await db.query.post.findMany({
       orderBy: desc(post.createdOn),
-      limit: 20
+      limit: 50
     });
 
     let cond = sql`false`;
@@ -68,7 +68,7 @@ postRouter.get('/', async (_, res: Response) => {
       }
     });
 
-    const newPosts = Array.from(allPosts.values()).sort((a, b) => b.createdOn - a.createdOn);
+    const newPosts = Array.from(allPosts.values()).sort((a: PostWithComments, b: PostWithComments) => b.createdOn.valueOf() - a.createdOn.valueOf());
 
     res.status(StatusCodes.OK).json(newPosts);
   } catch (e) {
@@ -80,9 +80,13 @@ postRouter.get('/', async (_, res: Response) => {
 postRouter.get('/search', async (req: Request, res: Response) => {
   const searchResultsLimits = req.query.limit ? parseInt(req.query.limit as string) : 100;
 
-  try {
-    const search = req.query.search as string;
+  const search = req.query.search as string;
+  if (!search) {
+    res.status(StatusCodes.BAD_REQUEST).send("Search query required");
+    return;
+  }
 
+  try {
     const posts = await db.select().from(post).where(match(post, `content:${search}`)).limit(searchResultsLimits);
 
     res.status(StatusCodes.OK).json(posts);

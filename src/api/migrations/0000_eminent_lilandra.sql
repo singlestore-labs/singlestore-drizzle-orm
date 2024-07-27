@@ -15,4 +15,8 @@ CREATE TABLE `post` (
 	CONSTRAINT `post_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
+ALTER TABLE `post` ADD FULLTEXT USING VERSION 2 postFullTextIdx (`content`);
+--> statement-breakpoint
+ALTER TABLE `comment` ADD FULLTEXT USING VERSION 2 commentFullTextIdx (`content`);
+--> statement-breakpoint
 CREATE INDEX `post_id_idx` ON `comment` (`post_id`) USING HASH;

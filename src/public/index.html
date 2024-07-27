@@ -9,11 +9,15 @@
   <body onload="init()">
     <main>
       <h1>Strings</h1>
-      <!-- <h2>Say even more with Strings.</h2> -->
+      <form class="new-post-search" onsubmit="return search(event)">
+        <input type="text" name="text" id="search-input" placeholder="Search" />
+        <button type="submit">🔎</button>
+      </form>
       <div style="display: flex; flex: 1; min-height: 0">
         <div id="posts-container" class="scrollable"></div>
+        <div id="search-results" class="scrollable hidden"></div>
       </div>
-      <form class="new-post" onsubmit="return post(event)">
+      <form class="new-post-search" onsubmit="return post(event)">
         <input
           type="text"
           name="text"
