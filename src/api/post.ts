@@ -30,7 +30,7 @@ postRouter.get('/', async (_, res: Response) => {
       with: {
         comments: true,
       },
-      limit: 100
+      limit: 20
     });
 
     const allComments = new Map();
@@ -49,7 +49,7 @@ postRouter.get('/', async (_, res: Response) => {
       for (const comment of post.comments) {
         const u = comment.id;
         const v = comment.repliesToComment;
-        if (v !== null) {
+        if (v !== "") {
           if (!adjT.has(v)) {
             adjT.set(v, []);
           }
@@ -60,7 +60,7 @@ postRouter.get('/', async (_, res: Response) => {
 
     for (const post of posts) {
       // @ts-ignore
-      post.comments = post.comments.filter(comment => comment.repliesToComment === null);
+      post.comments = post.comments.filter(comment => comment.repliesToComment === "");
     }
 
     const dfs = (u: number) => {
@@ -95,7 +95,6 @@ postRouter.get('/', async (_, res: Response) => {
         })
       }
       // @ts-ignore
-      newPost.comments.sort((a, b) => a.createdOn - b.createdOn);
       return newPost;
     });
 
