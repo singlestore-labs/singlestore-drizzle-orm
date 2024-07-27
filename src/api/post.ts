@@ -87,7 +87,7 @@ postRouter.get('/search', async (req: Request, res: Response) => {
   }
 
   try {
-    const posts = await db.select().from(post).where(match(post, `content:${search}`)).limit(searchResultsLimits);
+    const posts = await db.select().from(post).where(match(post, `${search.split(" ").map((term) => `content:${term}`).join(" ")}`)).limit(searchResultsLimits);
 
     res.status(StatusCodes.OK).json(posts);
   } catch (e) {

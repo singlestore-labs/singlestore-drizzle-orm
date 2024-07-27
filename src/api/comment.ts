@@ -30,9 +30,13 @@ commentRouter.get('/search', async (req: Request, res: Response) => {
   const searchResultsLimits = req.query.limit ? parseInt(req.query.limit as string) : 100;
 
   try {
-    const search = req.query.search;
+    const search = req.query.search as string;
+    if (!search) {
+      res.status(StatusCodes.BAD_REQUEST).send("Search query required");
+      return;
+    }
 
-    const comments = await db.select().from(comment).where(match(comment, `content:${search}`)).limit(searchResultsLimits);
+    const comments = await db.select().from(comment).where(match(comment, `${search.split(" ").map((term) => `content:${term}`).join(" ")}`)).limit(searchResultsLimits);
 
     res.status(StatusCodes.OK).json(comments);
   } catch (e) {
