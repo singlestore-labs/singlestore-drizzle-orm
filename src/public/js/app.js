@@ -1,5 +1,5 @@
 function init() {
-  getPosts();
+  getPosts(true);
   setInterval(getPosts, 15000);
 }
 
@@ -31,7 +31,7 @@ function post(event) {
   return false;
 }
 
-function getPosts() {
+function getPosts(isInit = false) {
   fetch("/api/post")
     .then((response) => {
       if (response.ok) {
@@ -64,7 +64,11 @@ function getPosts() {
           post.comments.forEach((comment) => {
             div.appendChild(buildComment(comment))
           })
-          scrollable.appendChild(div);
+          if (isInit) {
+            scrollable.appendChild(div)
+          } else {
+            scrollable.prepend(div); 
+          }
         }
       });
     })
