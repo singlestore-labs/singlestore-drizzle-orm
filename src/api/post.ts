@@ -1,10 +1,9 @@
 import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { db } from "./db"
-import { Comment, post } from './schema';
-import { desc } from 'drizzle-orm';
+import { comment, Comment, Post, post } from './schema';
+import { desc, eq, sql, or } from 'drizzle-orm';
 import { match } from 'drizzle-orm/singlestore-core';
-import { generateRandomID } from './common';
 
 const postRouter = express.Router();
 
@@ -15,7 +14,6 @@ postRouter.put('/', async (req: Request, res: Response) => {
   }
   try {
     await db.insert(post).values({
-      id: generateRandomID(16),
       content: req.body.content
     }).execute();
 
@@ -30,38 +28,47 @@ type CommentWithComments = Comment & {
   comments: Array<CommentWithComments>;
 }
 
+type PostWithComments = Post & {
+  comments: Array<CommentWithComments>;
+}
+
 postRouter.get('/', async (_, res: Response) => {
   try {
-    const posts = await db.query.post.findMany({
+    let posts = await db.query.post.findMany({
       orderBy: desc(post.createdOn),
-      with: {
-        comments: true,
-      },
       limit: 20
     });
 
-    const newPosts = posts.map((post) => {
-      const allComments = new Map<string, CommentWithComments>();
-      post.comments.forEach((comment) => {
-          allComments.set(comment.id, { ...comment, comments: [] });
-      });
+    let cond = sql`false`;
+    for (const post of posts) {
+      cond = or(cond, eq(comment.postId, post.id));
+    }
 
-      const newPost: typeof post = {
-        ...post,
-        comments: []
-      }
-
-      allComments.forEach((comment) => {
-          if (comment.repliesToComment) {
-              const repliesTo = allComments.get(comment.repliesToComment);
-              repliesTo?.comments.push(comment)
-          } else {
-            newPost.comments.push(comment)
-          }
-      });
-
-      return newPost;
+    const comments = await db.query.comment.findMany({
+      where: cond,
     });
+
+    const allComments = new Map<string, CommentWithComments>();
+    comments.forEach((comment: Comment) => {
+      allComments.set(comment.id, { ...comment, comments: [] });
+    });
+
+    const allPosts = new Map<string, PostWithComments>();
+    posts.forEach((post: Post) => {
+      allPosts.set(post.id, { ...post, comments: [] });
+    });
+
+    allComments.forEach((comment) => {
+      if (comment.repliesToComment) {
+        const repliesTo = allComments.get(comment.repliesToComment);
+        repliesTo?.comments.push(comment)
+      } else {
+        const post = allPosts.get(comment.postId);
+        post?.comments.push(comment);
+      }
+    });
+
+    const newPosts = Array.from(allPosts.values()).sort((a, b) => b.createdOn - a.createdOn);
 
     res.status(StatusCodes.OK).json(newPosts);
   } catch (e) {

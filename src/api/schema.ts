@@ -4,14 +4,17 @@ import {
   text,
   fulltext,
   varchar,
+  index,
+  sortKey,
 } from "drizzle-orm/singlestore-core";
-import { getRandomValues } from "node:crypto";
+import {
+  desc,
+} from "drizzle-orm";
+
 
 import { relations } from 'drizzle-orm';
 
-function newID() {
-  return Buffer.from(getRandomValues(new Uint8Array(16))).toString("hex").slice(0, 16);
-}
+import { newID } from './common';
 
 export const post = singlestoreTable('post', {
   id: varchar('id', { length: 16 }).primaryKey().$default(() => newID()),
@@ -19,8 +22,11 @@ export const post = singlestoreTable('post', {
   content: text('content').notNull(),
 }, (table) => {
   return {
-    postFullTextIdx: fulltext('postFullTextIdx', { version: 2 }).on(table.content)
-  } 
+    postFullTextIdx: fulltext('postFullTextIdx', { version: 2 }).on(table.content),
+    sortKey: sortKey(
+      desc(table.createdOn),
+    ),
+  }
 });
 
 export type Post = typeof post.$inferSelect; // return type when queried
@@ -34,7 +40,8 @@ export const comment = singlestoreTable('comment', {
   repliesToComment: varchar('replies_to_comment', { length: 16 }),
 }, (table) => {
   return {
-    commentFullTextIdx: fulltext('commentFullTextIdx', { version: 2 }).on(table.content)
+    commentFullTextIdx: fulltext('commentFullTextIdx', { version: 2 }).on(table.content),
+    postIdIdx: index('post_id_idx').on(table.postId).using('hash'),
   }
 });
 

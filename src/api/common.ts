@@ -1,11 +1,5 @@
-export function generateRandomID(length: number) {
-	// generate random string with a certain length, containing only alphanumeric chars
-	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+import { getRandomValues } from "node:crypto";
 
-	let res = "";
-	for (let i = 0; i < length; i++) {
-		res += charset.charAt(Math.floor(Math.random() * charset.length));
-	}
-
-	return res;
+export function newID() {
+	return Buffer.from(getRandomValues(new Uint8Array(16))).toString("hex").slice(0, 16);
 }

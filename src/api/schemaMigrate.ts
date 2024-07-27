@@ -1,4 +1,4 @@
-import { mysqlTable,  text, datetime, varchar } from "drizzle-orm/mysql-core";
+import { mysqlTable,  text, datetime, varchar, index } from "drizzle-orm/mysql-core";
 import { sql } from 'drizzle-orm/sql/sql';
 
 export const post = mysqlTable('post', {
@@ -13,4 +13,8 @@ export const comment = mysqlTable('comment', {
   content: text('content').notNull(),
   postId: varchar('post_id', { length: 16 }).notNull(),
   repliesToComment: varchar('replies_to_comment', { length: 16 }),
+}, (table) => {
+  return {
+    postIdIdx: index('post_id_idx').on(table.postId).using('hash'),
+  }
 });

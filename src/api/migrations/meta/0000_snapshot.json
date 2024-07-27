@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "86ab3d90-fba0-4fc7-a8cc-7f30f1206f20",
+  "id": "1b2e0cd6-2691-4dfc-a71b-7da5b35d90ea",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "comment": {
@@ -44,7 +44,16 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "post_id_idx": {
+          "name": "post_id_idx",
+          "columns": [
+            "post_id"
+          ],
+          "isUnique": false,
+          "using": "hash"
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "comment_id": {
