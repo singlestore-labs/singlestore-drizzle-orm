@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { db } from "./db"
-import { post } from './schema';
+import { Comment, post } from './schema';
 import { desc } from 'drizzle-orm';
 import { match } from 'drizzle-orm/singlestore-core';
 import { generateRandomID } from './common';
@@ -9,6 +9,10 @@ import { generateRandomID } from './common';
 const postRouter = express.Router();
 
 postRouter.put('/', async (req: Request, res: Response) => {
+  if (!req.body.content) {
+    res.status(StatusCodes.BAD_REQUEST).send("Content required");
+    return;
+  }
   try {
     await db.insert(post).values({
       id: generateRandomID(16),
@@ -22,9 +26,12 @@ postRouter.put('/', async (req: Request, res: Response) => {
   }
 });
 
+type CommentWithComments = Comment & {
+  comments: Array<CommentWithComments>;
+}
+
 postRouter.get('/', async (_, res: Response) => {
   try {
-    // @ts-ignore
     const posts = await db.query.post.findMany({
       orderBy: desc(post.createdOn),
       with: {
@@ -33,68 +40,26 @@ postRouter.get('/', async (_, res: Response) => {
       limit: 20
     });
 
-    const allComments = new Map();
-    for (const post of posts) {
-      for (const comment of post.comments) {
-        const commentNew = {
-          ...comment,
-          comments: []
-        }
-        allComments.set(comment.id, commentNew)
-      }
-    }
+    const newPosts = posts.map((post) => {
+      const allComments = new Map<string, CommentWithComments>();
+      post.comments.forEach((comment) => {
+          allComments.set(comment.id, { ...comment, comments: [] });
+      });
 
-    const adjT = new Map();
-    for (const post of posts) {
-      for (const comment of post.comments) {
-        const u = comment.id;
-        const v = comment.repliesToComment;
-        if (v !== "") {
-          if (!adjT.has(v)) {
-            adjT.set(v, []);
-          }
-          adjT.get(v).push(u);
-        }
-      }
-    }
-
-    for (const post of posts) {
-      // @ts-ignore
-      post.comments = post.comments.filter(comment => comment.repliesToComment === "");
-    }
-
-    const dfs = (u: number) => {
-      if (!u) {
-        return;
-      }
-
-      const comment = allComments.get(u);
-      if (!adjT.has(u)) {
-        return comment;
-      }
-
-      const replies = adjT.get(u).map((v: number) => dfs(v));
-      replies.sort((a: any, b: any) => a.createdOn - b.createdOn);
-      comment.comments = replies;
-      return comment;
-    };
-
-    for (const post of posts) {
-      // @ts-ignore
-      post.comments.forEach(comment => dfs(comment.id));
-    }
-
-    // @ts-ignore
-    const newPosts = posts.map(post => {
-      const newPost = {
+      const newPost: typeof post = {
         ...post,
-        // @ts-ignore
-        comments: post.comments.map(comment => {
-          const newComment = allComments.get(comment.id);
-          return newComment;
-        })
+        comments: []
       }
-      // @ts-ignore
+
+      allComments.forEach((comment) => {
+          if (comment.repliesToComment) {
+              const repliesTo = allComments.get(comment.repliesToComment);
+              repliesTo?.comments.push(comment)
+          } else {
+            newPost.comments.push(comment)
+          }
+      });
+
       return newPost;
     });
 

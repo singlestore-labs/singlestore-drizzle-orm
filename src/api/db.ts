@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/singlestore';
 import mysql from 'mysql2/promise';
 import * as schema from './schema';
 
-export async function connect(database: string | undefined = undefined): Promise<[mysql.Connection, ReturnType<typeof drizzle>]> {
+export async function connect(database: string | undefined = undefined): Promise<[mysql.Connection, ReturnType<typeof drizzle<typeof schema>>]> {
     if (!process.env.UNITTEST_PORT) {
         throw new Error('UNITTEST_PORT is not defined');
     }

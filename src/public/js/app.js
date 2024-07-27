@@ -1,4 +1,5 @@
 function post(event) {
+  event.preventDefault();
   text = event.target.elements.text.value;
 
   fetch("/api/post", {
@@ -14,6 +15,8 @@ function post(event) {
       if (!response.ok) {
         throw new Error("Request failed.");
       }
+      const input = document.getElementById("new-post-input");
+      input.value = "";
       getPosts();
     })
     .catch((error) => {
@@ -44,27 +47,11 @@ function getPosts() {
         div.classList.add("post-container");
         div.id = `post-${post.id}`;
 
-        commentHTML = `
-          <div class="comment post">
-            <div>
-              <p class="content">${post.content}</p>
-              <p class="date">${post.createdOn}</p>
-            </div>
-            <button class="reply" onclick="switchReplyVisibility('post-${post.id}')">↵</button>
-          </div>
-          <form class="response hidden" onsubmit="return commentCreate(event)">
-            <input class="hidden" type="text" name="postId" value="${post.id}" />
-            <input class="hidden" type="text" name="commentId" value="" />
-            <input type="text" name="text" id="text" placeholder="Add a comment" />
-            <button type="submit">✉</button>
-          </form>
-        `;
-
-        for (comment of post.comments) {
-          commentHTML += getHTMLForIndentedComment(comment);
-        }
-
-        div.innerHTML = commentHTML;
+        div.appendChild(buildPostElement(post))
+        div.appendChild(buildFormElement(post.id));
+        post.comments.forEach((comment) => {
+          div.appendChild(buildCommentElement(comment))
+        })
 
         scrollable.appendChild(div);
       });
@@ -72,36 +59,6 @@ function getPosts() {
     .catch((error) => {
       console.error(error);
     });
-}
-
-function getHTMLForIndentedComment(comment) {
-  commentHTML = `
-    <div class="comment">
-      <div>
-        <p class="content">${comment.content}</p>
-        <p class="date">${comment.createdOn}</p>
-      </div>
-      <button class="reply" onclick="switchReplyVisibility('comment-${comment.id}')">↵</button>
-    </div>
-    <form class="response hidden" onsubmit="return commentCreate(event)">
-      <input class="hidden" type="text" name="postId" value="${comment.postId}" />
-      <input class="hidden" type="text" name="commentId" value="${comment.id}" />
-      <input type="text" name="text" id="text" placeholder="Add a comment" />
-      <button type="submit">✉</button>
-    </form>
-  `;
-
-  if (comment.comments != undefined) {
-    for (reply of comment.comments) {
-      commentHTML += getHTMLForIndentedComment(reply);
-    }
-  }
-
-  return `
-    <div class="post-container indented" id="comment-${comment.id}">
-      ${commentHTML}
-    </div>
-  `;
 }
 
 function switchReplyVisibility(commentId) {
@@ -120,36 +77,124 @@ function switchReplyVisibility(commentId) {
   }
 }
 
-function commentCreate(event) {
-  text = event.target.elements.text.value;
-
-  postId = event.target.elements.postId.value;
-
-  commentId =
-    event.target.elements.commentId.value == ""
-      ? undefined
-      : event.target.elements.commentId.value;
-
-  fetch("/api/comment", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      content: text,
-      postId: postId,
-      repliesToCommentId: commentId,
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Request failed.");
-      }
-      getPosts();
+async function commentCreate(data) {
+  try {
+    const res = await fetch("/api/comment", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     })
-    .catch((error) => {
-      console.error(error);
-    });
+    if (!res.ok) {
+      throw new Error("Request failed.");
+    }
+    getPosts();
+  } catch (err) {
+    console.error(err);
+  }
+}
 
-  return false;
+// DOM functions
+
+function buildPostElement(post) {
+  const container = document.createElement("div")
+  container.classList.add("comment", "post")
+
+  container.appendChild(buildContent(post.content, post.createdOn));
+  container.appendChild(buildReplyButton(`post-${post.id}`));
+
+  return container;
+}
+
+function buildFormElement(postID, comment) {
+  const form = document.createElement("form");
+  form.classList.add("response", "hidden");
+
+  const postIDInput = document.createElement("input");
+  postIDInput.type = "hidden";
+  postIDInput.name = "postId";
+  postIDInput.value = postID;
+  form.appendChild(postIDInput);
+
+  if (comment) {
+    const commentIDInput = document.createElement("input");
+    commentIDInput.type = "hidden";
+    commentIDInput.name = "commentId";
+    commentIDInput.value = comment.id;
+    form.appendChild(commentIDInput);
+  }
+
+  const commentInput = document.createElement("input");
+  commentInput.type = "text";
+  commentInput.name = "text";
+  commentInput.placeholder = "Add a comment";
+  form.appendChild(commentInput);
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    await commentCreate({
+      content: commentInput.value,
+      postId: postID,
+      repliesToCommentId: comment?.id,
+    })
+    commentInput.value = "";
+    switchReplyVisibility(`comment-${comment.id}`);
+  }
+
+  const submitButton = document.createElement("button");
+  submitButton.type = "submit";
+  submitButton.innerHTML = "✉"
+  form.appendChild(submitButton);
+
+  return form;
+}
+
+function buildReplyButton(id) {
+  const replyButton = document.createElement("button");
+  replyButton.classList.add("reply");
+  replyButton.onclick = () => switchReplyVisibility(id);
+  replyButton.innerHTML = "↵";
+  return replyButton;
+}
+
+function buildCommentElement(comment) {
+  const container = document.createElement("div");
+  container.classList.add("post-container", "indented");
+  container.id = `comment-${comment.id}`;
+
+  const commentElement = document.createElement("div");
+  commentElement.classList.add("comment");
+
+  commentElement.appendChild(buildContent(comment.content, comment.createdOn));
+  commentElement.appendChild(buildReplyButton(`comment-${comment.id}`));
+  container.appendChild(commentElement);
+
+  container.appendChild(buildFormElement(comment.postId, comment));
+
+  if (comment.comments) {
+    comment.comments.forEach((c) => {
+      container.appendChild(buildCommentElement(c))
+    })
+  }
+
+  return container;
+}
+
+function buildContent(content, date) {
+  const contentContainer = document.createElement("div");
+  contentContainer.classList.add("comment-content");
+
+  const contentElement = document.createElement("p");
+  contentElement.classList.add("content");
+  contentElement.innerHTML = content;
+
+  const dateElement = document.createElement("p");
+  dateElement.classList.add("date");
+  dateElement.innerHTML = date;
+
+  contentContainer.appendChild(contentElement);
+  contentContainer.appendChild(dateElement);
+
+  return contentContainer;
 }

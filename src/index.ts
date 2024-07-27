@@ -2,7 +2,8 @@ import express from "express"
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { router } from "./api/routes"
+import { router as apiRouter } from "./api/routes"
+import { router as viewRouter } from "./api/views";
 
 const PORT = 8000
 
@@ -20,7 +21,10 @@ app.use('/', express.static(__dirname + '/public'))
 
 
 // Serve the API
-app.use("/api", router)
+app.use("/api", apiRouter)
+
+// Serve the views
+app.use("/views", viewRouter);
 
 /* final catch-all route to index.html defined last */
 app.get('/*', (req, res) => {

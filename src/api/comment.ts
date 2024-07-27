@@ -8,9 +8,12 @@ import { generateRandomID } from './common';
 const commentRouter = express.Router();
 
 commentRouter.put('/', async (req: Request, res: Response) => {
+  if (!req.body.content) {
+    res.status(StatusCodes.BAD_REQUEST).send("Content required");
+    return;
+  }
   try {
     await db.insert(comment).values({
-      id: generateRandomID(16),
       postId: req.body.postId,
       repliesToComment: req.body.repliesToCommentId,
       content: req.body.content
