@@ -1,3 +1,8 @@
+function init() {
+  getPosts();
+  setInterval(getPosts, 15000);
+}
+
 function post(event) {
   event.preventDefault();
   text = event.target.elements.text.value;
