@@ -2,14 +2,16 @@ import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { db } from "./db"
 import { post } from './schema';
-import { asc } from 'drizzle-orm';
+import { desc } from 'drizzle-orm';
 import { match } from 'drizzle-orm/singlestore-core';
+import { generateRandomID } from './common';
 
 const postRouter = express.Router();
 
 postRouter.put('/', async (req: Request, res: Response) => {
   try {
     await db.insert(post).values({
+      id: generateRandomID(16),
       content: req.body.content
     }).execute();
 
@@ -24,10 +26,11 @@ postRouter.get('/', async (_, res: Response) => {
   try {
     // @ts-ignore
     const posts = await db.query.post.findMany({
-      orderBy: asc(post.createdOn),
+      orderBy: desc(post.createdOn),
       with: {
         comments: true,
       },
+      limit: 100
     });
 
     const allComments = new Map();

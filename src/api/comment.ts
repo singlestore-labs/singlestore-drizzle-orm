@@ -3,12 +3,14 @@ import { StatusCodes } from 'http-status-codes';
 import { db } from "./db"
 import { comment } from './schema';
 import { match } from 'drizzle-orm/singlestore-core';
+import { generateRandomID } from './common';
 
 const commentRouter = express.Router();
 
 commentRouter.put('/', async (req: Request, res: Response) => {
   try {
     await db.insert(comment).values({
+      id: generateRandomID(16),
       postId: req.body.postId,
       repliesToComment: req.body.repliesToCommentId,
       content: req.body.content
