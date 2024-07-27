@@ -47,10 +47,10 @@ function getPosts() {
         div.classList.add("post-container");
         div.id = `post-${post.id}`;
 
-        div.appendChild(buildPostElement(post))
-        div.appendChild(buildFormElement(post.id));
+        div.appendChild(buildPost(post))
+        div.appendChild(buildForm(post.id));
         post.comments.forEach((comment) => {
-          div.appendChild(buildCommentElement(comment))
+          div.appendChild(buildComment(comment))
         })
 
         scrollable.appendChild(div);
@@ -97,7 +97,7 @@ async function commentCreate(data) {
 
 // DOM functions
 
-function buildPostElement(post) {
+function buildPost(post) {
   const container = document.createElement("div")
   container.classList.add("comment", "post")
 
@@ -107,7 +107,7 @@ function buildPostElement(post) {
   return container;
 }
 
-function buildFormElement(postID, comment) {
+function buildForm(postID, comment) {
   const form = document.createElement("form");
   form.classList.add("response", "hidden");
 
@@ -158,7 +158,7 @@ function buildReplyButton(id) {
   return replyButton;
 }
 
-function buildCommentElement(comment) {
+function buildComment(comment) {
   const container = document.createElement("div");
   container.classList.add("post-container", "indented");
   container.id = `comment-${comment.id}`;
@@ -170,11 +170,11 @@ function buildCommentElement(comment) {
   commentElement.appendChild(buildReplyButton(`comment-${comment.id}`));
   container.appendChild(commentElement);
 
-  container.appendChild(buildFormElement(comment.postId, comment));
+  container.appendChild(buildForm(comment.postId, comment));
 
   if (comment.comments) {
     comment.comments.forEach((c) => {
-      container.appendChild(buildCommentElement(c))
+      container.appendChild(buildComment(c))
     })
   }
 
