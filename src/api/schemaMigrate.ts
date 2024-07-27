@@ -1,16 +1,16 @@
-import { mysqlTable, bigint, text, datetime } from "drizzle-orm/mysql-core";
+import { mysqlTable,  text, datetime, varchar } from "drizzle-orm/mysql-core";
 import { sql } from 'drizzle-orm/sql/sql';
 
 export const post = mysqlTable('post', {
-  id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+  id: varchar('id', { length: 16 }).primaryKey(),
   createdOn: datetime('created_on', { fsp: 6 }).notNull().default(sql`now(6)`),
   content: text('content').notNull(),
 });
 
 export const comment = mysqlTable('comment', {
-  id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+  id: varchar('id', { length: 16 }).primaryKey(),
   createdOn: datetime('created_on', { fsp: 6 }).notNull().default(sql`now(6)`),
   content: text('content').notNull(),
-  postId: bigint('post_id', { mode: 'number' }).notNull(),
-  repliesToComment: bigint('replies_to_comment', { mode: 'number' }),
+  postId: varchar('post_id', { length: 16 }).notNull(),
+  repliesToComment: varchar('replies_to_comment', { length: 16 }),
 });

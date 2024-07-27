@@ -1,15 +1,15 @@
 import {
-  bigint,
   singlestoreTable,
   datetime,
   text,
   fulltext,
+  varchar,
 } from "drizzle-orm/singlestore-core";
 
 import { relations } from 'drizzle-orm';
 
 export const post = singlestoreTable('post', {
-  id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+  id: varchar('id', { length: 16 }).primaryKey(),
   createdOn: datetime('created_on', { fsp: 6 }).notNull().defaultNow(6),
   content: text('content').notNull(),
 }, (table) => {
@@ -22,11 +22,11 @@ export type Post = typeof post.$inferSelect; // return type when queried
 export type NewPost = typeof post.$inferInsert; // insert type
 
 export const comment = singlestoreTable('comment', {
-  id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+  id: varchar('id', { length: 16 }).primaryKey(),
   createdOn: datetime('created_on', { fsp: 6 }).notNull().defaultNow(6),
   content: text('content').notNull(),
-  postId: bigint('post_id', { mode: 'number' }).notNull(),
-  repliesToComment: bigint('replies_to_comment', { mode: 'number' }),
+  postId: varchar('post_id', { length: 16 }).notNull(),
+  repliesToComment: varchar('replies_to_comment', { length: 16 }),
 }, (table) => {
   return {
     commentFullTextIdx: fulltext('commentFullTextIdx', { version: 2 }).on(table.content)

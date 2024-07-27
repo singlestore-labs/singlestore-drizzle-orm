@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "31fecd5f-c8bb-4021-9fdf-99aa0d779e41",
+  "id": "86ab3d90-fba0-4fc7-a8cc-7f30f1206f20",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "comment": {
@@ -9,10 +9,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigint",
+          "type": "varchar(16)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "created_on": {
           "name": "created_on",
@@ -31,14 +31,14 @@
         },
         "post_id": {
           "name": "post_id",
-          "type": "bigint",
+          "type": "varchar(16)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "replies_to_comment": {
           "name": "replies_to_comment",
-          "type": "bigint",
+          "type": "varchar(16)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -61,10 +61,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigint",
+          "type": "varchar(16)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "created_on": {
           "name": "created_on",

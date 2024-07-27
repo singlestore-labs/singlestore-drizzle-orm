@@ -11,8 +11,8 @@
     "postinstall": "rm -rf node_modules/drizzle-orm && ln -s @drodrigues4/drizzle-orm node_modules/drizzle-orm",
     "test": "vitest --no-file-parallelism",
     "start": "npx tsx src/index.ts",
-    "generate": "npx drizzle-kit generate --config drizzle.config.ts",
-    "migrate": "npx tsx migrate.ts",
+    "generate": "npx drizzle-kit generate --config src/api/drizzle.config.ts",
+    "migrate": "npx tsx src/api/migrate.ts",
     "build": "tsc && copyfiles -u 1 'src/public/*' 'src/public/**/*' dist",
     "prod": "node dist/index.js"
   },
