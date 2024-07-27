@@ -3,17 +3,23 @@
   <head>
     <title>Strings</title>
     <link rel="stylesheet" href="./css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.4.0/showdown.min.js"></script>
     <script src="./js/app.js" defer></script>
   </head>
   <body onload="init()">
     <main>
       <h1>Strings</h1>
       <!-- <h2>Say even more with Strings.</h2> -->
-      <div style="display:flex;flex:1;min-height:0">
+      <div style="display: flex; flex: 1; min-height: 0">
         <div id="posts-container" class="scrollable"></div>
       </div>
       <form class="new-post" onsubmit="return post(event)">
-        <input type="text" name="text" id="new-post-input" placeholder="Post it!" />
+        <input
+          type="text"
+          name="text"
+          id="new-post-input"
+          placeholder="Post it!"
+        />
         <button type="submit">✉</button>
       </form>
     </main>

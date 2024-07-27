@@ -53,21 +53,23 @@ function getPosts(isInit = false) {
         // onto its children
         const existingPost = document.getElementById(`post-${post.id}`);
         if (existingPost) {
-          post.comments.forEach((comment) => checkForCommentAndBuild(existingPost, comment))
+          post.comments.forEach((comment) =>
+            checkForCommentAndBuild(existingPost, comment)
+          );
         } else {
           const div = document.createElement("div");
           div.classList.add("post-container");
           div.id = `post-${post.id}`;
 
-          div.appendChild(buildPost(post))
+          div.appendChild(buildPost(post));
           div.appendChild(buildForm(post.id));
           post.comments.forEach((comment) => {
-            div.appendChild(buildComment(comment))
-          })
+            div.appendChild(buildComment(comment));
+          });
           if (isInit) {
-            scrollable.appendChild(div)
+            scrollable.appendChild(div);
           } else {
-            scrollable.prepend(div); 
+            scrollable.prepend(div);
           }
         }
       });
@@ -101,7 +103,7 @@ async function commentCreate(data) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    })
+    });
     if (!res.ok) {
       throw new Error("Request failed.");
     }
@@ -114,8 +116,8 @@ async function commentCreate(data) {
 // DOM functions
 
 function buildPost(post) {
-  const container = document.createElement("div")
-  container.classList.add("comment", "post")
+  const container = document.createElement("div");
+  container.classList.add("comment", "post");
 
   container.appendChild(buildContent(post.content, post.createdOn));
   container.appendChild(buildReplyButton(`post-${post.id}`));
@@ -153,18 +155,18 @@ function buildForm(postID, comment) {
       content: commentInput.value,
       postId: postID,
       repliesToCommentId: comment?.id,
-    })
+    });
     commentInput.value = "";
     if (comment) {
       switchReplyVisibility(`comment-${comment.id}`);
     } else {
       switchReplyVisibility(`post-${postID}`);
     }
-  }
+  };
 
   const submitButton = document.createElement("button");
   submitButton.type = "submit";
-  submitButton.innerHTML = "✉"
+  submitButton.innerHTML = "✉";
   form.appendChild(submitButton);
 
   return form;
@@ -181,7 +183,9 @@ function buildReplyButton(id) {
 function checkForCommentAndBuild(parent, comment) {
   const existingComment = document.getElementById(`comment-${comment.id}`);
   if (existingComment) {
-    comment.comments?.forEach((c) => checkForCommentAndBuild(existingComment, c));
+    comment.comments?.forEach((c) =>
+      checkForCommentAndBuild(existingComment, c)
+    );
   } else {
     parent.appendChild(buildComment(comment));
   }
@@ -203,12 +207,14 @@ function buildComment(comment) {
 
   if (comment.comments) {
     comment.comments.forEach((c) => {
-      container.appendChild(buildComment(c))
-    })
+      container.appendChild(buildComment(c));
+    });
   }
 
   return container;
 }
+
+const conv = new showdown.Converter();
 
 function buildContent(content, date) {
   const contentContainer = document.createElement("div");
@@ -216,7 +222,7 @@ function buildContent(content, date) {
 
   const contentElement = document.createElement("p");
   contentElement.classList.add("content");
-  contentElement.innerHTML = content;
+  contentElement.innerHTML = conv.makeHtml(content);
 
   const dateElement = document.createElement("p");
   dateElement.classList.add("date");

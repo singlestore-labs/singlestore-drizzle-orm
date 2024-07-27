@@ -126,6 +126,7 @@ form.new-post button {
   font-size: 16px;
   border: none;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 form.response {
