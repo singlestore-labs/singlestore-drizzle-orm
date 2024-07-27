@@ -3,7 +3,6 @@ import { StatusCodes } from 'http-status-codes';
 import { db } from "./db"
 import { comment } from './schema';
 import { match } from 'drizzle-orm/singlestore-core';
-import { generateRandomID } from './common';
 
 const commentRouter = express.Router();
 

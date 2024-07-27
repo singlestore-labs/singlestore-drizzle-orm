@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { db } from "./db"
 import { comment, Comment, Post, post } from './schema';
-import { desc, eq, sql, or } from 'drizzle-orm';
+import { desc, eq, sql, or, SQL } from 'drizzle-orm';
 import { match } from 'drizzle-orm/singlestore-core';
 
 const postRouter = express.Router();
@@ -39,7 +39,7 @@ postRouter.get('/', async (_, res: Response) => {
       limit: 50
     });
 
-    let cond = sql`false`;
+    let cond: SQL | undefined = sql`false`;
     for (const post of posts) {
       cond = or(cond, eq(comment.postId, post.id));
     }

@@ -1,6 +1,6 @@
 function init() {
   getPosts(true);
-  setInterval(getPosts, 15000);
+  setInterval(getPosts, 5000);
 }
 
 function post(event) {
