@@ -38,22 +38,29 @@ function getPosts() {
       // get element with class scrollable
       const scrollable = document.querySelector(".scrollable");
       // remove all children
-      while (scrollable.firstChild) {
-        scrollable.removeChild(scrollable.firstChild);
-      }
+      // while (scrollable.firstChild) {
+      //   scrollable.removeChild(scrollable.firstChild);
+      // }
       // for each post, add a new div
       data.forEach((post) => {
-        const div = document.createElement("div");
-        div.classList.add("post-container");
-        div.id = `post-${post.id}`;
+        // very simple merge behavior
+        // if the post exists in the DOM already, skip rendering it and move
+        // onto its children
+        const existingPost = document.getElementById(`post-${post.id}`);
+        if (existingPost) {
+          post.comments.forEach((comment) => checkForCommentAndBuild(existingPost, comment))
+        } else {
+          const div = document.createElement("div");
+          div.classList.add("post-container");
+          div.id = `post-${post.id}`;
 
-        div.appendChild(buildPost(post))
-        div.appendChild(buildForm(post.id));
-        post.comments.forEach((comment) => {
-          div.appendChild(buildComment(comment))
-        })
-
-        scrollable.appendChild(div);
+          div.appendChild(buildPost(post))
+          div.appendChild(buildForm(post.id));
+          post.comments.forEach((comment) => {
+            div.appendChild(buildComment(comment))
+          })
+          scrollable.appendChild(div);
+        }
       });
     })
     .catch((error) => {
@@ -139,7 +146,11 @@ function buildForm(postID, comment) {
       repliesToCommentId: comment?.id,
     })
     commentInput.value = "";
-    switchReplyVisibility(`comment-${comment.id}`);
+    if (comment) {
+      switchReplyVisibility(`comment-${comment.id}`);
+    } else {
+      switchReplyVisibility(`post-${postID}`);
+    }
   }
 
   const submitButton = document.createElement("button");
@@ -156,6 +167,15 @@ function buildReplyButton(id) {
   replyButton.onclick = () => switchReplyVisibility(id);
   replyButton.innerHTML = "↵";
   return replyButton;
+}
+
+function checkForCommentAndBuild(parent, comment) {
+  const existingComment = document.getElementById(`comment-${comment.id}`);
+  if (existingComment) {
+    comment.comments?.forEach((c) => checkForCommentAndBuild(existingComment, c));
+  } else {
+    parent.appendChild(buildComment(comment));
+  }
 }
 
 function buildComment(comment) {
