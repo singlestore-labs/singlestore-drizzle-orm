@@ -23,7 +23,7 @@ export const post = singlestoreTable('post', {
 }, (table) => {
   return {
     postFullTextIdx: fulltext('postFullTextIdx', { version: 2 }).on(table.content),
-    sortKey: sortKey(
+    sortedKey: sortKey(
       desc(table.createdOn),
     ),
   }
